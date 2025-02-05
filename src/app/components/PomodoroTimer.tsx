@@ -1,21 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Play, Pause, RefreshCcw, Settings } from "lucide-react";
+import { Play, Pause, RefreshCcw, Settings, Loader, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Project } from "../types/utils";
 
 type Phase = "FOCUS" | "SHORT_BREAK" | "LONG_BREAK";
 
 const pomodoroTypes = [
-    {
-        id: "test",
-        name: "test",
-        focusTime: 10,
-        shortBreak: 5,
-        longBreak: 15,
-        description: "-",
-    },
+    
     {
         id: "light",
         name: "Light",
@@ -397,7 +390,7 @@ export default function PomodoroTimer({
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.5 }}
-                                className="bg-slate-50 rounded-lg p-3 w-1/2"
+                                className="bg-slate-100 rounded-lg p-3 w-1/2"
                             >
                                 <h3 className="text-xs font-medium text-slate-500 mb-1">
                                     Completed
@@ -411,7 +404,7 @@ export default function PomodoroTimer({
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.4, duration: 0.5 }}
-                                className="bg-slate-50 rounded-lg p-3 w-1/2"
+                                className="bg-slate-100 rounded-lg p-3 w-1/2"
                             >
                                 <h3 className="text-xs font-medium text-slate-500 mb-1">
                                     Focus Time Spent
@@ -421,6 +414,21 @@ export default function PomodoroTimer({
                                 </p>
                             </motion.div>
                         </div>
+
+                        <motion.div
+                            key={motivationalPhrase}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.3 }}
+                            className="bg-white border border-slate-200 text-slate-800  w-full py-2 px-3 rounded-md inline-block text-sm font-medium"
+                        >
+                            {isLoading ? (
+                                <Loader className="animate-spin" />
+                            ) : (
+                                `${motivationalPhrase}`
+                            )}
+                        </motion.div>
                     </motion.div>
                 ) : (
                     <motion.div
@@ -431,6 +439,17 @@ export default function PomodoroTimer({
                         transition={{ duration: 0.5, ease: "easeInOut" }}
                         className="flex flex-col"
                     >
+                        <motion.h2
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, ease: "easeOut" }}
+                            className="px-4 text-lg mb-4 font-bold text-slate-700 flex items-center"
+                        >
+                            Select Pomodoro Type
+                            <Clock className="w-4 h-4 ml-2 text-slate-500"/>
+                        </motion.h2>
+
+
                         {pomodoroTypes.map((type, index) => (
                             <motion.button
                                 key={type.id}
@@ -445,13 +464,18 @@ export default function PomodoroTimer({
                             >
                                 <h3 className="text-lg font-semibold text-slate-800">
                                     {type.name}
+                                    {type.id === "standard" ? (
+                                        " (Recommended)"
+                                    ) : (
+                                        ""
+                                    )}
                                 </h3>
                                 <p className="text-sm text-slate-600">
                                     {type.description}
                                 </p>
                                 <p className="text-xs text-slate-500 mt-1">
                                     {type.name === "test" ? (
-                                        "-"
+                                        ""
                                     ) : (
                                         `Focus: ${type.focusTime / 60} min | Break: ${type.shortBreak / 60} min | Long Break: ${type.longBreak / 60} min`
                                     )}
