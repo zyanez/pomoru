@@ -16,10 +16,6 @@ export async function GET(req: NextRequest) {
         });
     }
 
-    // Retrieving projectId from request
-    const body = await req.json();
-    const {projectId} = body
-
     try{
         // Retrieveing tasks from database by projectId
         const tasks = await db
@@ -30,7 +26,6 @@ export async function GET(req: NextRequest) {
                 important: tasksTable.important
             })
             .from(tasksTable)
-            .where(eq(tasksTable.projectId, projectId)) // If there are no matches, an empty list is sent
             .all();
 
         return new Response(JSON.stringify(tasks), {
