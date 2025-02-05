@@ -10,6 +10,7 @@ import StatsCard from "./components/StatsCard";
 import { ProjectDetails } from "./components/ProjectDetails";
 import { useSession } from "next-auth/react";
 import { Folder } from "lucide-react";
+import { TasksTable } from "./components/tasks/TasksTable";
 
 export default function Home() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(
@@ -48,7 +49,10 @@ export default function Home() {
                                     //         <StatsCard totalTime={totalTime} totalPomodoro={totalPomodoro} />
                                     //     </div>
                                     // </div>
-                                    <ProjectDetails selectedProject={selectedProject} />
+                                    <>
+                                        <ProjectDetails selectedProject={selectedProject} />
+                                        <TasksTable selectedProjectId={selectedProject.id}/>
+                                    </>
                                 ) : (
                                     <div className="h-full flex items-center justify-center">
                                         <div className="text-center">
