@@ -43,10 +43,17 @@ export async function POST(req: NextRequest) {
     const userId = session.user.id;
 
     const body = await req.json();
-    const { name } = body;
+    const { name, type } = body;
 
     if (!name) {
         return new Response(JSON.stringify({ error: "Name is required" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
+
+    if (!type) {
+        return new Response(JSON.stringify({ error: "Type is required" }), {
             status: 400,
             headers: { "Content-Type": "application/json" },
         });
@@ -59,7 +66,7 @@ export async function POST(req: NextRequest) {
                 name: name,
                 ownerId: userId,
                 completed: 0,
-                type: 'personal'
+                type: type
             })
             .returning({
                 id: projectsTable.id,
