@@ -15,7 +15,7 @@ export default function CreateProjectModal({
     onProjectCreated,
 }: CreateProjectModalProps) {
     const [projectName, setProjectName] = useState("");
-    const [projectType, setProjectType] = useState<"work" | "personal">("personal");
+    const [projectType, setProjectType] = useState<"Work" | "Personal">("Personal");
     const [description, setDescription] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -67,7 +67,7 @@ export default function CreateProjectModal({
         if (projectName.trim()) {
             await createProject();
             setProjectName("");
-            setProjectType("personal");
+            setProjectType("Personal");
             setDescription("");
             setStartDate("");
             setEndDate("");
@@ -124,9 +124,9 @@ export default function CreateProjectModal({
                                 <div className="flex space-x-4">
                                     <button
                                         type="button"
-                                        onClick={() => setProjectType("personal")}
+                                        onClick={() => setProjectType("Personal")}
                                         className={`flex items-center text-sm px-4 py-2 rounded-full transition-colors duration-200 ${
-                                            projectType === "personal"
+                                            projectType === "Personal"
                                                 ? "bg-slate-800 text-white"
                                                 : "bg-slate-200 text-slate-700 hover:bg-slate-300"
                                         }`}
@@ -136,9 +136,9 @@ export default function CreateProjectModal({
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={() => setProjectType("work")}
+                                        onClick={() => setProjectType("Work")}
                                         className={`flex items-center text-sm px-4 py-2 rounded-full transition-colors duration-200 ${
-                                            projectType === "work"
+                                            projectType === "Work"
                                                 ? "bg-slate-800 text-white"
                                                 : "bg-slate-200 text-slate-700 hover:bg-slate-300"
                                         }`}
