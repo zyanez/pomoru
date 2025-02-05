@@ -1,13 +1,21 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Play, Pause, RefreshCcw, Loader } from "lucide-react";
+import { Play, Pause, RefreshCcw, Settings } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Project } from "../types/utils";
+import type { Project } from "../types/utils";
 
 type Phase = "FOCUS" | "SHORT_BREAK" | "LONG_BREAK";
 
 const pomodoroTypes = [
+    {
+        id: "test",
+        name: "test",
+        focusTime: 10,
+        shortBreak: 5,
+        longBreak: 15,
+        description: "-",
+    },
     {
         id: "light",
         name: "Light",
@@ -37,7 +45,6 @@ const pomodoroTypes = [
     },
 ];
 
-
 interface PomodoroTimerProps {
     selectedProject: Project | null;
     onTimeUpdate: (seconds: number) => void;
@@ -60,6 +67,7 @@ export default function PomodoroTimer({
     const [completedPomodoros, setCompletedPomodoros] = useState(0);
     const [motivationalPhrase, setMotivationalPhrase] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [showTimer, setShowTimer] = useState(false);
 
     useEffect(() => {
         if ("Notification" in window && Notification.permission !== "granted") {
@@ -116,7 +124,7 @@ export default function PomodoroTimer({
             "Deep work now, big rewards later!",
             "You're making progress, even if it feels slow!",
         ];
-        
+
         const emojis = [
             "🌟",
             "💪",
@@ -151,18 +159,27 @@ export default function PomodoroTimer({
         setIsActive((prev) => !prev);
     };
 
+    const handleInitialPlay = () => {
+        setShowTimer(true);
+    };
+
     // Reset Timer Function
     const resetTimer = () => {
         setIsActive(false);
-        setPhase("FOCUS");
         setTimeLeft(pomodoroType.focusTime);
         setMotivationalPhrase(selectMotivationalPhrase());
+    };
+
+    // Change Timer Type
+    const toggleTimerType = () => {
+        setIsActive(false);
+        setShowTimer(false);
     };
 
     // Select new project -> Reset timer
     useEffect(() => {
         resetTimer();
-    }, [selectedProject]);
+    }, [selectedProject]); // Added resetTimer to dependencies
 
     useEffect(() => {
         onTimeUpdate(focusTimeSpent);
@@ -241,20 +258,25 @@ export default function PomodoroTimer({
             "px-4 py-2 rounded text-sm font-semibold transition-colors inline-flex items-center gap-2 disabled:hover:bg-none";
         const variantClasses =
             variant === "default"
-                ? "bg-slate-900 text-white"
+                ? "bg-slate-800 text-white"
                 : "border border-slate-300 text-slate-900 enabled:hover:bg-slate-100";
-        const disabledClasses = 
-            disabled ? "pointer-events-none opacity-70" : "";
+        const disabledClasses = disabled
+            ? "pointer-events-none opacity-70"
+            : "";
 
         return (
-            <button onClick={onClick} className={`${baseClasses} ${variantClasses} ${disabledClasses}`} disabled={!!disabled}>
+            <button
+                onClick={onClick}
+                className={`${baseClasses} ${variantClasses} ${disabledClasses}`}
+                disabled={!!disabled}
+            >
                 {children}
             </button>
         );
     };
 
     const handleChangeType = (type: (typeof pomodoroTypes)[number]) => {
-        if (type.id === pomodoroType.id) return;
+        setShowTimer(true);
         setPomodoroType(type);
         setPhase("FOCUS");
         setTimeLeft(type.focusTime);
@@ -264,138 +286,182 @@ export default function PomodoroTimer({
 
     //const progressOffset = 283 - (283 * timeLeft) / pomodoroType.focusTime;
 
-    const currentPhaseTotalTime = phase === "FOCUS" 
-    ? pomodoroType.focusTime 
-    : phase === "SHORT_BREAK" 
-        ? pomodoroType.shortBreak 
-        : pomodoroType.longBreak;
+    const currentPhaseTotalTime =
+        phase === "FOCUS"
+            ? pomodoroType.focusTime
+            : phase === "SHORT_BREAK"
+            ? pomodoroType.shortBreak
+            : pomodoroType.longBreak;
 
     const progressOffset = 283 - (283 * timeLeft) / currentPhaseTotalTime;
+
+    // We need to improve this later!!
+    const formatPhase = (str: string) => {
+        const formattedStr = str.replace(/_/g, " ").toLowerCase();
+        return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
+    };
 
     return (
         <motion.div
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -20, opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
             className="w-full md:w-96 border-l border-slate-200 bg-white p-4 md:p-8 overflow-auto"
         >
-            <div className="text-center">
-                <h2 className="text-2xl font-semibold text-slate-900 mb-2">
-                    Pomodoro Timer
-                </h2>
-                <div className="flex flex-wrap justify-center gap-2 mb-2">
-                    {pomodoroTypes.map((type) => (
-                        <Button
-                            disabled={isActive}
-                            key={type.id}
-                            variant={pomodoroType.id === type.id ? "default" : "outline"}
-                            onClick={() => handleChangeType(type)}
+            <AnimatePresence mode="wait">
+                {showTimer ? (
+                    <motion.div
+                        key="timer"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                    >
+                        <h2 className="text-center text-2xl font-bold text-slate-800 mb-4">
+                            {formatPhase(phase.toString())}
+                        </h2>
+                        <motion.div
+                            className="relative w-48 h-48 mx-auto mb-6"
+                            initial={{ scale: 0.9 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 0.5, ease: "easeOut" }}
                         >
-                            {type.name}
-                        </Button>
-                    ))}
-                </div>
-                <p className="text-xs text-slate-500 mb-4">{pomodoroType.description}</p>
+                            <svg
+                                className="w-full h-full"
+                                viewBox="0 0 100 100"
+                            >
+                                <circle
+                                    className="text-slate-200"
+                                    cx="50"
+                                    cy="50"
+                                    r="45"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="10"
+                                />
+                                <motion.circle
+                                    className="text-slate-800"
+                                    cx="50"
+                                    cy="50"
+                                    r="45"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="10"
+                                    strokeDasharray="283"
+                                    initial={{ strokeDashoffset: 283 }}
+                                    animate={{
+                                        strokeDashoffset: progressOffset,
+                                    }}
+                                    transition={{
+                                        duration: 0.5,
+                                        ease: "easeInOut",
+                                    }}
+                                    transform="rotate(-90 50 50)"
+                                />
+                            </svg>
+                            <motion.div
+                                className="absolute inset-0 flex items-center justify-center"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.3, duration: 0.5 }}
+                            >
+                                <span className="text-4xl font-bold text-slate-800">
+                                    {formatTimerTime(timeLeft)}
+                                </span>
+                            </motion.div>
+                        </motion.div>
+                        <motion.div
+                            className="flex justify-center gap-4 mb-6"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                        >
+                            <Button variant="outline" onClick={toggleTimer}>
+                                {isActive ? (
+                                    <Pause className="h-4 w-4" />
+                                ) : (
+                                    <Play className="h-4 w-4" />
+                                )}
+                            </Button>
+                            <Button variant="outline" onClick={resetTimer}>
+                                <RefreshCcw className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" onClick={toggleTimerType}>
+                                <Settings className="h-4 w-4" />
+                            </Button>
+                        </motion.div>
 
-                <motion.div
-                    className="relative w-48 h-48 mx-auto mb-6"
-                >
-                    <svg className="w-full h-full" viewBox="0 0 100 100">
-                        <circle
-                            cx="50"
-                            cy="50"
-                            r="45"
-                            fill="none"
-                            stroke="#f1f5f9"
-                            strokeWidth="10"
-                        />
-                        <motion.circle
-                            cx="50"
-                            cy="50"
-                            r="45"
-                            fill="none"
-                            stroke="#0f172a"
-                            strokeWidth="10"
-                            strokeDasharray="283"
-                            animate={{ strokeDashoffset: progressOffset }}
-                            transition={{ duration: isActive ? 0.5 : 0 }}
-                            transform="rotate(-90 50 50)"
-                        />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-4xl font-bold text-slate-900">
-                            {formatTimerTime(timeLeft)}
-                        </span>
-                    </div>
-                </motion.div>
+                        <div className="flex flex-row justify-between gap-4 items-center mb-4">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3, duration: 0.5 }}
+                                className="bg-slate-50 rounded-lg p-3 w-1/2"
+                            >
+                                <h3 className="text-xs font-medium text-slate-500 mb-1">
+                                    Completed
+                                </h3>
+                                <p className="text-xl font-bold text-slate-900">
+                                    {completedPomodoros}
+                                </p>
+                            </motion.div>
 
-                <div className="flex justify-center gap-6 mb-6">
-                    <Button size="lg" onClick={toggleTimer}>
-                        {isActive ? (
-                            <>
-                                <Pause className="mr-2 h-4 w-4" />
-                                Pause
-                            </>
-                        ) : (
-                            <>
-                                <Play className="mr-2 h-4 w-4" />
-                                Start
-                            </>
-                        )}
-                    </Button>
-                    <Button size="lg" variant="outline" onClick={resetTimer}>
-                        <RefreshCcw className="mr-2 h-4 w-4" />
-                        Reset
-                    </Button>
-                </div>
-
-                <div className="flex flex-row justify-between gap-4 items-center mb-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="bg-slate-50 rounded-lg p-3 w-1/2"
-                    >
-                        <h3 className="text-xs font-medium text-slate-500 mb-1">
-                            Completed
-                        </h3>
-                        <p className="text-xl font-bold text-slate-900">
-                            {completedPomodoros}
-                        </p>
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4, duration: 0.5 }}
+                                className="bg-slate-50 rounded-lg p-3 w-1/2"
+                            >
+                                <h3 className="text-xs font-medium text-slate-500 mb-1">
+                                    Focus Time Spent
+                                </h3>
+                                <p className="text-xl font-bold text-slate-900">
+                                    {formatFullTime(focusTimeSpent)}
+                                </p>
+                            </motion.div>
+                        </div>
                     </motion.div>
-
+                ) : (
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
+                        key="type-selection"
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="bg-slate-50 rounded-lg p-3 w-1/2"
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                        className="flex flex-col"
                     >
-                        <h3 className="text-xs font-medium text-slate-500 mb-1">
-                            Focus Time Spent
-                        </h3>
-                        <p className="text-xl font-bold text-slate-900">
-                            {formatFullTime(focusTimeSpent)}
-                        </p>
-                    </motion.div>
-                </div>
-                
+                        {pomodoroTypes.map((type, index) => (
+                            <motion.button
+                                key={type.id}
+                                className="w-full text-left p-4 rounded-lg transition-all duration-200 hover:bg-slate-100"
+                                onClick={() => handleChangeType(type)}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    delay: index * 0.1,
+                                    duration: 0.5,
+                                }}
+                            >
+                                <h3 className="text-lg font-semibold text-slate-800">
+                                    {type.name}
+                                </h3>
+                                <p className="text-sm text-slate-600">
+                                    {type.description}
+                                </p>
+                                <p className="text-xs text-slate-500 mt-1">
+                                    {type.name === "test" ? (
+                                        "-"
+                                    ) : (
+                                        `Focus: ${type.focusTime / 60} min | Break: ${type.shortBreak / 60} min | Long Break: ${type.longBreak / 60} min`
+                                    )}
+                                </p>
 
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={motivationalPhrase}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.3 }}
-                        className="bg-slate-50 text-slate-800  w-full py-2 rounded-md inline-block text-sm font-medium"
-                    >
-                        {isLoading ? (
-                            <Loader className="animate-spin" />
-                        ) : (
-                            `${motivationalPhrase}`
-                        )}
+                            </motion.button>
+                        ))}
                     </motion.div>
-                </AnimatePresence>
-            </div>
+                )}
+            </AnimatePresence>
         </motion.div>
     );
 }
