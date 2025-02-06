@@ -107,27 +107,15 @@ export async function PUT(req: NextRequest) {
         });
     }
 
-    // Retrieving updates to task from request
+    // Retrieving new task from request
     const body = await req.json();
-    /* 
-    The request must be structured like
-    req = {
-        taskId : 0,
-        updates : {
-            title,
-            important,
-            ...,
-        }
-    }
-    */
-    const {taskId} = body
-    const {updatesToTask} = body
+    const {id} = body
 
     try {
         const updatedTask = await db
             .update(tasksTable)
-            .set(updatesToTask)
-            .where(eq(tasksTable.id, taskId))
+            .set(body)
+            .where(eq(tasksTable.id, id))
             .returning({
                 id: tasksTable.id,
                 title: tasksTable.title,
