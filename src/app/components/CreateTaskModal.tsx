@@ -98,42 +98,20 @@ export default function CreateTaskModal({ onTaskCreated } : {onTaskCreated : (ta
                                     Importance
                                 </label>
                                 <div className="flex space-x-4">
-                                    <button
-                                        type="button"
-                                        onClick={() => setImportant(0)}
-                                        className={`flex items-center text-sm px-4 py-2 rounded-full transition-colors duration-200 ${
-                                            important === 0
-                                                ? "bg-slate-800 text-white"
-                                                : "bg-slate-200 text-slate-700 hover:bg-slate-300"
-                                        }`}
-                                    >
-                                        <User size={18} className="mr-2" />
-                                        Low
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setImportant(1)}
-                                        className={`flex items-center text-sm px-4 py-2 rounded-full transition-colors duration-200 ${
-                                            important === 1
-                                                ? "bg-slate-800 text-white"
-                                                : "bg-slate-200 text-slate-700 hover:bg-slate-300"
-                                        }`}
-                                    >
-                                        <User size={18} className="mr-2" />
-                                        Medium
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setImportant(2)}
-                                        className={`flex items-center text-sm px-4 py-2 rounded-full transition-colors duration-200 ${
-                                            important === 2
-                                                ? "bg-slate-800 text-white"
-                                                : "bg-slate-200 text-slate-700 hover:bg-slate-300"
-                                        }`}
-                                    >
-                                        <User size={18} className="mr-2" />
-                                        High
-                                    </button>
+                                    {["Low","Medium","Hight"].map((text, i)=>(
+                                        <button
+                                            type="button"
+                                            onClick={() => setImportant(i)}
+                                            className={`flex items-center text-sm px-4 py-2 rounded-full transition-colors duration-200 ${
+                                                important === i
+                                                    ? "bg-slate-800 text-white"
+                                                    : "bg-slate-200 text-slate-700 hover:bg-slate-300"
+                                            }`}
+                                        >
+                                            <User size={18} className="mr-2" />
+                                            {text}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
                             <button
