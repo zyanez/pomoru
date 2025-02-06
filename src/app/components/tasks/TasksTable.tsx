@@ -1,7 +1,6 @@
 import { CirclePlus, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Task } from "../../types/utils";
-import { TaskDetails } from "./TaskDetails";
 import CreateTaskModal from "../CreateTaskModal";
 
 const initial_list : Task[] = []
@@ -9,8 +8,7 @@ const initial_list : Task[] = []
 export function TasksTable({selectedProjectId}:{selectedProjectId : number}){
     const [taskList, setTaskList] = useState(initial_list)
     const [loading, setLoading] = useState(true)
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
+    
     useEffect(() => {
         const fetchTasks = async () => {
             setLoading(true)
@@ -81,9 +79,7 @@ export function TasksTable({selectedProjectId}:{selectedProjectId : number}){
             </div>
         ) : (
             <div>
-                <button onClick={()=>setIsModalOpen(true)}>
-                    <CirclePlus className="text-black h-4 w-4"/>
-                </button>
+                <CreateTaskModal onTaskCreated={handleTaskCreated} />
                 {
                     taskList.length != 0 ? taskList.map((task, i) => (
                         <div className="flex flex-row">
@@ -97,11 +93,6 @@ export function TasksTable({selectedProjectId}:{selectedProjectId : number}){
                 }
             </div>
         )}
-        <CreateTaskModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onTaskCreated={handleTaskCreated}
-            projectId={selectedProjectId}
-        />
+        
     </>
 }

@@ -1,24 +1,15 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Briefcase, User, ClipboardPlus } from 'lucide-react';
+import { X, User, ClipboardPlus } from 'lucide-react';
 import { Task } from "../types/utils";
+import { useSelectedProject } from "../providers/selectedProject/use";
 
-interface CreateTaskModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onTaskCreated: (task: Task) => void; 
-    projectId: number;
-}
 
-export default function CreateTaskModal({
-    isOpen,
-    onClose,
-    onTaskCreated,
-    projectId
-}: CreateTaskModalProps) {
+export default function CreateTaskModal({ onTaskCreated } : {onTaskCreated : (task: Task) => void}) {
+    const {state : {selectedProject}} = useSelectedProject()
     const [title, setTitle] = useState("");
     const [important, setImportant] = useState(0);
-
+    const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const createTask = async () => {
@@ -32,7 +23,7 @@ export default function CreateTaskModal({
                 body: JSON.stringify({
                         title: title,
                         important: important,
-                        projectId: projectId
+                        projectId: selectedProject?.id
                 }),
             });
     
@@ -57,13 +48,17 @@ export default function CreateTaskModal({
             setTitle("");
             setImportant(0);
 
-            onClose();
+            setIsOpen(false);
         } else {
             alert("Task title is required.");
         }
     };
 
     return (
+        <>
+        <button className="flex flex-row rounded bg-slate-300 px-4" onClick={()=>setIsOpen(true)}>
+            <span className="text-slate-700">Add Task</span>
+        </button>
         <AnimatePresence>
             {isOpen && (
                 <motion.div
@@ -80,7 +75,7 @@ export default function CreateTaskModal({
                     >
                         <div className="flex justify-between items-center mb-6">
                             <h2 className="text-2xl font-bold">New Task</h2>
-                            <button onClick={onClose} className="text-slate-500 hover:text-slate-700">
+                            <button onClick={()=>setIsOpen(false)} className="text-slate-500 hover:text-slate-700">
                                 <X size={24} />
                             </button>
                         </div>
@@ -166,6 +161,7 @@ export default function CreateTaskModal({
                 </motion.div>
             )}
         </AnimatePresence>
+        </>
     );
 }
 
