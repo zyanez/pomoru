@@ -4,14 +4,21 @@ import { useSession } from "next-auth/react";
 import { Clock, TagsIcon, EllipsisVertical } from "lucide-react";
 import { Project } from "../types/utils";
 import { useState } from "react";
+import { TypeIcon } from "./TypeIcon";
 
 export function ProjectDetails({
     selectedProject,
 }: {
-    selectedProject: Project | null;
+    selectedProject: Project;
 }) {
     const [modalOpen, setModalOpen] = useState(false);
     const { data: session } = useSession();
+
+
+    // fetch tasks related to project
+    // need CRUD for tasks
+    // create/POST needs button somewhere
+    // others RUD need special row component TaskDetails
 
     const handleProjectConfig = () => {
         setModalOpen(true);
@@ -25,35 +32,33 @@ export function ProjectDetails({
         <>
             <div className="flex p-6 flex-row items-start justify-between space-y-0 pb-8">
                 <div className="flex flex-col">
-                    <div className="mb-4 text-black flex flex-row items-center">
-                        {session ? (
-                            selectedProject ? (
-                                <h1 className="text-2xl font-bold">
-                                    {selectedProject.name}
-                                </h1>
-                            ) : (
-                                "No project selected."
-                            )
-                        ) : (
-                            "No account..."
-                        )}
+                    <div className="mb-2 text-black flex flex-row items-center">
+                        <h1 className="text-2xl font-bold">
+                            {selectedProject.name}
+                        </h1>
                     </div>
-                    <div className="flex flex-row text-slate-500 text-sm space-x-4">
+                    <div className="mb-2 flex flex-row text-slate-500 text-sm space-x-4">
                         <div className="flex flex-row items-center space-x-2">
-                            <TagsIcon className="h-4 w-4" />
+                            <TypeIcon type={selectedProject.type}/>
                             <span>
-                                Type: {selectedProject && selectedProject.type}
+                            Type:{" "}
+                                {selectedProject.type
+                                    ? selectedProject.type
+                                    : "Unknown type"}
                             </span>
                         </div>
                         <div className="flex flex-row items-center space-x-2">
                             <Clock className="h-4 w-4" />
                             <span>
                                 Status:{" "}
-                                {selectedProject && selectedProject.completed
+                                {selectedProject.completed
                                     ? "Completed."
                                     : "In Progress..."}
                             </span>
                         </div>
+                    </div>
+                    <div className="flex flex-row text-slate-900 text-lg space-x-4">
+                        {selectedProject.description}
                     </div>
                 </div>
                 <button

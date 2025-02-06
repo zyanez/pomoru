@@ -5,14 +5,10 @@ import { useEffect, useState } from "react";
 import { Project } from "../types/utils";
 import { motion } from "framer-motion";
 import CreateProjectModal from "./CreateProjectModal";
+import { useSelectedProject } from "../providers/selectedProject/use";
 
-export function Sidebar({
-    onSelectProject,
-    selectedProject,
-}: {
-    onSelectProject: (project: Project) => void;
-    selectedProject: Project | null;
-}) {
+export function Sidebar() {
+    const { state:{selectedProject}, actions: { setSelectedProject } } = useSelectedProject();
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +34,7 @@ export function Sidebar({
 
     const handleProjectCreated = (newProject: Project) => {
         setProjects((prevProjects) => [...prevProjects, newProject]);
-        onSelectProject(newProject);
+        setSelectedProject(newProject);
     };
 
     return (
@@ -72,7 +68,7 @@ export function Sidebar({
                                         key={project.id}
                                         project={project}
                                         active={selectedProject?.id === project.id}
-                                        onClick={() => onSelectProject(project)}
+                                        onClick={() => setSelectedProject(project)}
                                     />
                                 ))}
                                 {projects.length === 0 && (

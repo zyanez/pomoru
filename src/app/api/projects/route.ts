@@ -3,8 +3,9 @@ import { projectsTable } from "@/db/schema";
 import { getServerSession } from "next-auth";
 import { eq } from "drizzle-orm";
 import { authOptions } from "../auth/[...nextauth]/route";
+import { NextRequest } from "next/server";
 
-export async function GET(req) {
+export async function GET(req: NextRequest) {
     const session = await getServerSession(authOptions);
     const userId = session?.user?.id || "0";
 
@@ -12,7 +13,13 @@ export async function GET(req) {
         .select({
             id: projectsTable.id,
             name: projectsTable.name,
+            description: projectsTable.description,
             ownerId: projectsTable.ownerId,
+            type: projectsTable.type,
+            completed: projectsTable.completed,
+            archived: projectsTable.archived,
+            workedTime: projectsTable.workedTime,
+            restedTime: projectsTable.restedTime,
         })
         .from(projectsTable)
         .where(eq(projectsTable.ownerId, userId))
@@ -23,7 +30,7 @@ export async function GET(req) {
     });
 }
 
-export async function POST(req) {
+export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session) {
@@ -36,7 +43,7 @@ export async function POST(req) {
     const userId = session.user.id;
 
     const body = await req.json();
-    const { name } = body;
+    const { name, type } = body;
 
     if (!name) {
         return new Response(JSON.stringify({ error: "Name is required" }), {
@@ -45,25 +52,32 @@ export async function POST(req) {
         });
     }
 
+    if (!type) {
+        return new Response(JSON.stringify({ error: "Type is required" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+        });
+    }
+
     try {
         const result = await db
-    .insert(projectsTable)
-    .values({
-        name: name,
-        ownerId: userId,
-        completed: 0,
-        type: 'personal'
-    })
-    .returning({
-        id: projectsTable.id,
-        name: projectsTable.name,
-    })
-    .execute();
+            .insert(projectsTable)
+            .values({
+                name: name,
+                ownerId: userId,
+                completed: 0,
+                type: type
+            })
+            .returning({
+                id: projectsTable.id,
+                name: projectsTable.name,
+            })
+            .execute();
 
-return new Response(JSON.stringify(result[0]), {
-    status: 201,
-    headers: { "Content-Type": "application/json" },
-});
+        return new Response(JSON.stringify(result[0]), {
+            status: 201,
+            headers: { "Content-Type": "application/json" },
+        });
     } catch (error) {
         console.error("Error inserting project:", error);
         return new Response(JSON.stringify({ error: "Internal Server Error" }), {
