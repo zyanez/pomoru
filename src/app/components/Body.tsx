@@ -1,9 +1,11 @@
 import { Folder } from "lucide-react";
-import { Project } from "../types/utils";
 import { ProjectDetails } from "./ProjectDetails";
 import { TasksTable } from "./tasks/TasksTable";
+import { useSelectedProject } from "../providers/selectedProject/use";
 
-export function Body({selectedProject,}: {selectedProject: Project | null;}) {
+export function Body() {
+    const { state:{selectedProject} } = useSelectedProject();
+    
     return (
         <div className="flex-1 p-4 md:p-8 overflow-auto">
             {selectedProject ? (

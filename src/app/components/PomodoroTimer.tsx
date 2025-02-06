@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Play, Pause, RefreshCcw, Loader } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Project } from "../types/utils";
+import { useSelectedProject } from "../providers/selectedProject/use";
 
 type Phase = "FOCUS" | "SHORT_BREAK" | "LONG_BREAK";
 
@@ -39,16 +40,15 @@ const pomodoroTypes = [
 
 
 interface PomodoroTimerProps {
-    selectedProject: Project | null;
     onTimeUpdate: (seconds: number) => void;
     onPomodoroUpdate: (pomodoros: number) => void;
 }
 
 export default function PomodoroTimer({
-    selectedProject,
     onTimeUpdate,
     onPomodoroUpdate,
 }: PomodoroTimerProps) {
+    const { state:{selectedProject}, actions: { setSelectedProject } } = useSelectedProject();
     // pomodoroTypes[0] (light) | pomodoroTypes[1] (standard) | pomodoroTypes[3] (intensive)
     const [pomodoroType, setPomodoroType] = useState(pomodoroTypes[1]);
     const [pomodorosBeforeLongBreak] = useState(4);
