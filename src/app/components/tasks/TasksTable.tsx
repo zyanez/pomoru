@@ -1,26 +1,29 @@
-import { CirclePlus, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Task } from "../../types/utils";
 import CreateTaskModal from "../CreateTaskModal";
+import { TaskDetails } from "./TaskDetails";
+import { useTaskList } from "@/app/providers/taskList/use";
+import { useSelectedProject } from "@/app/providers/selectedProject/use";
 
-const initial_list : Task[] = []
-
-export function TasksTable({selectedProjectId}:{selectedProjectId : number}){
-    const [taskList, setTaskList] = useState(initial_list)
+export function TasksTable(){
+    const {state : {taskList}, actions: {addAll}} = useTaskList()
+    const {state : {selectedProject}} = useSelectedProject()
     const [loading, setLoading] = useState(true)
     
     useEffect(() => {
         const fetchTasks = async () => {
             setLoading(true)
             try {
-                const response = await fetch("/api/tasks/"+selectedProjectId);
+                if (selectedProject == null) throw new Error("Failed to create task");
+                const response = await fetch("/api/tasks/"+selectedProject?.id);
                 if (!response.ok) {
                     console.log("error?")
                     throw new Error(`Error: ${response.statusText}`);
                 }
 
                 const data: Task[] = await response.json();
-                setTaskList(data);
+                addAll(data);
             } catch (error) {
                 console.error("Error fetching projects: ", error);
             } finally {
@@ -29,45 +32,7 @@ export function TasksTable({selectedProjectId}:{selectedProjectId : number}){
         };
 
         fetchTasks();
-    }, [selectedProjectId]);
-
-    const handleTaskCreated = (newTask: Task) => {
-        setTaskList(taskList.concat(newTask));
-    };
-
-    const updateTask = async (task:Task) => {
-        try {
-            const response = await fetch("/api/tasks", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(task),
-            });
-    
-            if (!response.ok) {
-                throw new Error("Failed to create task");
-            }
-    
-            const newTask = await response.json();
-            alert("no error")
-            setTaskList(taskList.map((oldTask, i) => {
-                if (oldTask.id === newTask.id) {
-                  // Replace with new task
-                  return newTask;
-                } else {
-                  // The rest does not change
-                  return oldTask;
-                }
-              }))
-        } catch (error) {
-            console.error("Error creating task:", error);
-            alert("There was an error creating the task. Please try again.");
-        }
-    }
-
-    
-
+    }, [selectedProject]);
 
     return <>
         {loading ? (
@@ -79,16 +44,10 @@ export function TasksTable({selectedProjectId}:{selectedProjectId : number}){
             </div>
         ) : (
             <div>
-                <CreateTaskModal onTaskCreated={handleTaskCreated} />
+                <CreateTaskModal />
                 {
                     taskList.length != 0 ? taskList.map((task, i) => (
-                        <div className="flex flex-row">
-                            <input type="checkbox" checked={task.completed} onChange={()=>{
-                                task.completed = true;
-                                updateTask(task)
-                            }} />
-                            <span className={"mx-2 text-bold " + (task.important == 1 ? "text-green-500" : "text-red-500")}>{task.title}</span>
-                        </div>
+                        <TaskDetails task={task} />
                     )) : <p className="text-black">no task</p>
                 }
             </div>

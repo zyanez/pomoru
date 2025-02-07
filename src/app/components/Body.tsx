@@ -13,7 +13,7 @@ export function Body() {
                 <>
                     <ProjectDetails selectedProject={selectedProject} />
                     <TaskListProvider>
-                        <TasksTable selectedProjectId={selectedProject.id}/>
+                        <TasksTable />
                     </TaskListProvider>
                 </>
             ) : (

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, User, ClipboardPlus } from 'lucide-react';
-import { Task } from "../types/utils";
 import { useSelectedProject } from "../providers/selectedProject/use";
+import { useTaskList } from "../providers/taskList/use";
 
 
-export default function CreateTaskModal({ onTaskCreated } : {onTaskCreated : (task: Task) => void}) {
+export default function CreateTaskModal() {
+    const {actions : {addTask}} = useTaskList()
     const {state : {selectedProject}} = useSelectedProject()
     const [title, setTitle] = useState("");
     const [important, setImportant] = useState(0);
@@ -15,6 +16,8 @@ export default function CreateTaskModal({ onTaskCreated } : {onTaskCreated : (ta
     const createTask = async () => {
         setIsLoading(true);
         try {
+            if (selectedProject == null) throw new Error("Failed to create task");
+            
             const response = await fetch("/api/tasks", {
                 method: "POST",
                 headers: {
@@ -23,16 +26,15 @@ export default function CreateTaskModal({ onTaskCreated } : {onTaskCreated : (ta
                 body: JSON.stringify({
                         title: title,
                         important: important,
-                        projectId: selectedProject?.id
+                        projectId: selectedProject.id
                 }),
             });
-    
-            if (!response.ok) {
-                throw new Error("Failed to create task");
-            }
-    
+
+            if (!response.ok) throw new Error("Failed to create task");
+            
             const newTask = await response.json();
-            onTaskCreated(newTask);
+            addTask(newTask);
+
         } catch (error) {
             console.error("Error creating task:", error);
             alert("There was an error creating the task. Please try again.");
@@ -98,7 +100,7 @@ export default function CreateTaskModal({ onTaskCreated } : {onTaskCreated : (ta
                                     Importance
                                 </label>
                                 <div className="flex space-x-4">
-                                    {["Low","Medium","Hight"].map((text, i)=>(
+                                    {["Low","Medium","High"].map((text, i)=>(
                                         <button
                                             type="button"
                                             onClick={() => setImportant(i)}
