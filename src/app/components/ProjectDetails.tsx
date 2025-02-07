@@ -30,7 +30,7 @@ export function ProjectDetails({
 
     return (
         <>
-            <div className="flex p-6 flex-row items-start justify-between space-y-0 pb-8">
+            <div className="flex flex-row items-start justify-between space-y-0 pb-8">
                 <div className="flex flex-col">
                     <div className="mb-2 text-black flex flex-row items-center">
                         <h1 className="text-2xl font-bold">

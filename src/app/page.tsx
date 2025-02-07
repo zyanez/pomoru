@@ -20,28 +20,7 @@ export default function Home() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Header />
-
-            {/* 🧪 Testing 🧪 */}
-
-            <Modal
-                title="Modal"
-                isOpen={isOpen}
-                onOpen={() => setIsOpen(true)}
-                onClose={() => setIsOpen(false)}
-                buttonLabel="Open Modal"
-                buttonIcon={<TestTube className="ml-3 w-5 h-5" />}
-                footerAction={{
-                    label: "Confirm",
-                    onClick: () => alert("Action!"),
-                }}
-            >
-                <p>Content</p>
-            </Modal>
-
-            {/* 🧪 Testing 🧪 */}
-
-
+            <Header/>
             <div className="flex flex-1 bg-white">
                 {session ? (
                     <SelectedProjectProvider>

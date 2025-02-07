@@ -300,7 +300,7 @@ export default function PomodoroTimer({
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -20, opacity: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="w-full md:w-96 border-l border-slate-200 bg-white p-4 md:p-8 overflow-auto"
+            className="w-full md:w-96  sm:border-l border-slate-200 bg-white p-4 md:p-8 overflow-auto"
         >
             <AnimatePresence mode="wait">
                 {showTimer ? (
