@@ -2,6 +2,7 @@ import { Folder } from "lucide-react";
 import { ProjectDetails } from "./ProjectDetails";
 import { TasksTable } from "./tasks/TasksTable";
 import { useSelectedProject } from "../providers/selectedProject/use";
+import { TaskListProvider } from "../providers/taskList/provider";
 
 export function Body() {
     const { state:{selectedProject} } = useSelectedProject();
@@ -11,7 +12,9 @@ export function Body() {
             {selectedProject ? (
                 <>
                     <ProjectDetails selectedProject={selectedProject} />
-                    <TasksTable selectedProjectId={selectedProject.id}/>
+                    <TaskListProvider>
+                        <TasksTable selectedProjectId={selectedProject.id}/>
+                    </TaskListProvider>
                 </>
             ) : (
                 <div className="h-full flex items-center justify-center">
