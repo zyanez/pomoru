@@ -1,11 +1,10 @@
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Task } from "../../types/utils";
-import CreateTaskModal from "../CreateTaskModal";
 import { TaskDetails } from "./TaskDetails";
 import { useTaskList } from "@/app/providers/taskList/use";
 import { useSelectedProject } from "@/app/providers/selectedProject/use";
-import { TaskModal2 } from "../modal/CreateTaskModal";
+import { CreateTaskModal } from "../modal/CreateTaskModal";
 
 export function TasksTable(){
     const {state : {taskList}, actions: {addAll}} = useTaskList()

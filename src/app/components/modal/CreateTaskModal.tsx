@@ -10,7 +10,7 @@ import { useSelectedProject } from "@/app/providers/selectedProject/use";
 import LoadingModal from "./LoadingModal";
 
 
-export function TaskModal(){
+export function CreateTaskModal(){
     const {actions : {addTask}} = useTaskList()
     const {state : {selectedProject}} = useSelectedProject()
     const [title, setTitle] = useState("");
