@@ -7,7 +7,7 @@ export function Body() {
     const { state:{selectedProject} } = useSelectedProject();
     
     return (
-        <div className="flex-1 p-4 md:p-8 overflow-auto">
+        <div className="flex-1 p-16 overflow-auto">
             {selectedProject ? (
                 <>
                     <ProjectDetails selectedProject={selectedProject} />

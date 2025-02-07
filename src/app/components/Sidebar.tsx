@@ -6,6 +6,8 @@ import { Project } from "../types/utils";
 import { motion } from "framer-motion";
 import CreateProjectModal from "./CreateProjectModal";
 import { useSelectedProject } from "../providers/selectedProject/use";
+import { Logo } from "./Logo";
+import { APP_VERSION } from "../config/version";
 
 export function Sidebar() {
     const { state:{selectedProject}, actions: { setSelectedProject } } = useSelectedProject();
@@ -38,11 +40,20 @@ export function Sidebar() {
     };
 
     return (
-        <div className="pb-12 w-60 border-r border-gray-200">
-            <div className="space-y-4 py-4">
+        <div className="pb-12 w-64 border-r border-gray-200">
+            <div className="space-y-4">
+                <div className="py-4 px-3 border-b border-slate-200 hidden sm:block">
+                    <div className="px-4 flex flex-row gap-2 text-slate-800 items-center">
+                        <Logo/>
+                        <div className="flex flex-row items-center">
+                            <h1 className="font-bold text-lg">Pomoru</h1>
+                            <span className="ml-2 px-2 py-0.5 text-xs text-slate-500 bg-slate-200 rounded-full">v{APP_VERSION}</span>
+                        </div>
+                    </div>
+                </div>
                 <div className="px-3 py-2">
                     <div className="flex items-center justify-between mb-2 text-black">
-                        <h2 className="px-4 text-lg font-semibold tracking-tight">
+                        <h2 className="px-4 text-base font-semibold tracking-tight">
                             Projects
                         </h2>
                         <button
@@ -61,7 +72,7 @@ export function Sidebar() {
                             </span>
                         </div>
                     ) : (
-                        <div className="h-[calc(100vh-10rem)] px-1 overflow-y-auto">
+                        <div className="h-[calc(100vh-10rem)] overflow-y-auto">
                             <div className="space-y-1">
                                 {projects.map((project) => (
                                     <ProjectButton

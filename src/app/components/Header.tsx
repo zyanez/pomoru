@@ -19,25 +19,16 @@ export default function Header() {
     }
 
     return (
-        <header className="bg-white border-b border-slate-200 ">
-            <div className="mx-auto px-8">
+        <header className="bg-white border-b border-slate-200 block sm:hidden">
+            <div className="mx-auto">
                 <div className="flex justify-between items-center py-4">
-                    <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5 }}
-                        className="flex items-center text-slate-900 gap-2"
-                    >
-                        <Logo className="h-8 w-8"/>
-
-
-                        <div className="flex flex-row items-center ">
-                            <h1 className="text-lg font-bold">Proctivando</h1>
-                            <span className="ml-2 px-2 py-0.5 text-xs text-slate-500 bg-slate-200 rounded-full">
-                                v{APP_VERSION}
-                            </span>
+                    <div className="px-7 flex flex-row gap-2 text-slate-800 items-center">
+                        <Logo/>
+                        <div className="flex flex-row items-center">
+                            <h1 className="font-bold text-lg">Pomoru</h1>
+                            <span className="ml-2 px-2 py-0.5 text-xs text-slate-500 bg-slate-200 rounded-full">v{APP_VERSION}</span>
                         </div>
-                    </motion.div>
+                    </div>
                     <div className="flex items-center space-x-4">
                         {session ? (
                             <motion.button
