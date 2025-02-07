@@ -15,7 +15,7 @@ interface ModalProps {
     onOpen?: () => void;
 }
 
-export default function Modal({
+export default function BaseModal({
     title,
     children,
     footerAction,
