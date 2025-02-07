@@ -8,12 +8,14 @@ import CreateProjectModal from "./CreateProjectModal";
 import { useSelectedProject } from "../providers/selectedProject/use";
 import { Logo } from "./Logo";
 import { APP_VERSION } from "../config/version";
+import Modal from "./modal/modal";
 
 export function Sidebar() {
     const { state:{selectedProject}, actions: { setSelectedProject } } = useSelectedProject();
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -52,17 +54,33 @@ export function Sidebar() {
                     </div>
                 </div>
                 <div className="px-3 py-2">
-                    <div className="flex items-center justify-between mb-2 text-black">
+                    <div className="flex items-center justify-between mb-2 text-slate-900">
                         <h2 className="px-4 text-base font-semibold tracking-tight">
                             Projects
                         </h2>
-                        <button
+                        {/* <button
                             onClick={() => setIsModalOpen(true)}
                             className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-slate-100"
                             aria-label="Add new project"
                         >
                             <Plus className="h-4 w-4"/>
-                        </button>
+                        </button> */}
+
+                        <Modal
+                            title="New Project"
+                            isOpen={isOpen}
+                            onOpen={() => setIsOpen(true)}
+                            onClose={() => setIsOpen(false)}
+                            buttonLabel=""
+                            buttonIcon={<Plus className="h-4 w-4" />}
+                            footerAction={{
+                                label: "Save",
+                                onClick: () => alert("Action!"),
+                            }}
+                            ghost={true}
+                        >
+                            <p>Placeholder</p>
+                        </Modal>
                     </div>
                     {loading ? (
                         <div className="flex items-center justify-center h-16">
@@ -92,11 +110,11 @@ export function Sidebar() {
                     )}
                 </div>
             </div>
-            <CreateProjectModal
+            {/* <CreateProjectModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onProjectCreated={handleProjectCreated}
-            />
+            /> */}
         </div>
     );
 }
@@ -114,7 +132,7 @@ function ProjectButton({
         <motion.button
             whileTap={{ scale: 0.95 }} 
             onClick={onClick}
-            className={`w-full text-black font-medium text-black text-sm flex items-center justify-start gap-2 px-4 py-2 rounded-md text-left hover:bg-slate-100  ${
+            className={`w-full text-slate-800 font-medium text-sm flex items-center justify-start gap-2 px-4 py-2 rounded-md text-left hover:bg-slate-100  ${
                 active ? "bg-slate-100" : "bg-white"
             }`}
         >

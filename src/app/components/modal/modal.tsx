@@ -13,6 +13,7 @@ interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     onOpen?: () => void;
+    ghost?: boolean;
 }
 
 export default function Modal({
@@ -24,12 +25,18 @@ export default function Modal({
     isOpen,
     onClose,
     onOpen,
+    ghost = false,
 }: ModalProps) {
     return (
         <>
+    
             <button
                 onClick={() => onOpen?.()}
-                className="flex items-center gap-2 bg-slate-800 text-white px-4 py-2 rounded"
+                className={`flex items-center gap-2 rounded transition-colors ${
+                    ghost
+                        ? "bg-transparent p-2 text-slate-900 hover:bg-slate-200"
+                        : "bg-slate-800 px-4 py-2  text-white hover:bg-slate-700"
+                }`}
             >
                 {buttonIcon}
                 {buttonLabel}
@@ -69,7 +76,7 @@ export default function Modal({
                                 {footerAction && (
                                     <button
                                         onClick={footerAction.onClick}
-                                        className="bg-slate-800 px-4 py-2 rounded text-sm font-semibold transition-colors inline-flex items-center gap-2 disabled:hover:bg-none text-white enabled:hover:bg-slate-700 "
+                                        className="bg-slate-800 px-4 py-2 rounded text-sm font-semibold transition-colors inline-flex items-center gap-2 disabled:hover:bg-none text-white enabled:hover:bg-slate-700"
                                     >
                                         {footerAction.label}
                                     </button>

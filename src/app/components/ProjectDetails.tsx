@@ -5,28 +5,21 @@ import { Clock, TagsIcon, EllipsisVertical } from "lucide-react";
 import { Project } from "../types/utils";
 import { useState } from "react";
 import { TypeIcon } from "./TypeIcon";
+import Modal from "./modal/modal";
 
 export function ProjectDetails({
     selectedProject,
 }: {
     selectedProject: Project;
 }) {
-    const [modalOpen, setModalOpen] = useState(false);
     const { data: session } = useSession();
-
+    const [isOpen, setIsOpen] = useState(false);
 
     // fetch tasks related to project
     // need CRUD for tasks
     // create/POST needs button somewhere
     // others RUD need special row component TaskDetails
 
-    const handleProjectConfig = () => {
-        setModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setModalOpen(false);
-    };
 
     return (
         <>
@@ -61,36 +54,27 @@ export function ProjectDetails({
                         {selectedProject.description}
                     </div>
                 </div>
-                <button
-                    onClick={handleProjectConfig} 
-                    className="inline-flex items-center text-black justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+                
+                <Modal
+                    title="Project Settings"
+                    isOpen={isOpen}
+                    onOpen={() => setIsOpen(true)}
+                    onClose={() => setIsOpen(false)}
+                    buttonLabel=""
+                    buttonIcon={<EllipsisVertical className="h-4 w-4" />}
+                    footerAction={{
+                        label: "Save",
+                        onClick: () => alert("Action!"),
+                    }}
+                    ghost={true}
                 >
-                    <EllipsisVertical className="h-4 w-4" />
-                </button>
+                    <p>Placeholder</p>
+                </Modal>
             </div>
 
             {/* Modal */}
-            {modalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg w-96 text-slate-800">
-                        <h2 className="text-xl font-bold mb-4">Project Settings</h2>
-                        <div className="flex flex-row gap-2">
-                            <button
-                                onClick={closeModal}
-                                className="border-slate-200 border hover:bg-slate-100 px-4 py-2 rounded text-sm font-semibold transition-colors inline-flex items-center gap-2 disabled:hover:bg-none"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                //
-                                className="bg-slate-900 text-white px-4 py-2 rounded text-sm font-semibold transition-colors inline-flex items-center gap-2 disabled:hover:bg-none"
-                            >
-                                Save
-                            </button>
-                        </div> 
-                    </div>
-                </div>
-            )}
+
+            
         </>
     );
 }

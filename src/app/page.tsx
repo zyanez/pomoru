@@ -34,7 +34,7 @@ export default function Home() {
                     "No account..."
                 )}
             </div>
-            <Footer />
+            
         </div>
     );
 }
