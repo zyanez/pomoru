@@ -5,6 +5,7 @@ import CreateTaskModal from "../CreateTaskModal";
 import { TaskDetails } from "./TaskDetails";
 import { useTaskList } from "@/app/providers/taskList/use";
 import { useSelectedProject } from "@/app/providers/selectedProject/use";
+import { TaskModal2 } from "../modal/CreateTaskModal";
 
 export function TasksTable(){
     const {state : {taskList}, actions: {addAll}} = useTaskList()
@@ -43,7 +44,7 @@ export function TasksTable(){
                 </span>
             </div>
         ) : (
-            <div>
+            <div key="asjf">
                 <CreateTaskModal />
                 {
                     taskList.length != 0 ? taskList.map((task, i) => (
