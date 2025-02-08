@@ -19,16 +19,10 @@ export async function GET(req: NextRequest) {
     // Retrieving projectId from url
     const projectId = parseInt(req.url.split("/tasks/")[1],10)
     
-
     try{
         // Retrieveing tasks from database by projectId
         const tasks = await db
-            .select({
-                id: tasksTable.id,
-                title: tasksTable.title,
-                completed: tasksTable.completed,
-                important: tasksTable.important
-            })
+            .select()
             .from(tasksTable)
             .where(eq(tasksTable.projectId, projectId)) // If there are no matches, an empty list is sent
             .all();
