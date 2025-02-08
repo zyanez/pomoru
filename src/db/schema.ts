@@ -19,7 +19,7 @@ export const projectsTable = sqliteTable("projects", {
     ownerId: text("owner_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
     workedTime: integer("workedTime").default(0).notNull(),
     restedTime: integer("restedTime").default(0).notNull(),
-    createdAt: integer("created_at", { mode: "timestamp" }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+    createdAt: text("created_at").notNull().default(sql`(current_timestamp)`),
 });
 
 export const tasksTable = sqliteTable("tasks", {
@@ -28,7 +28,7 @@ export const tasksTable = sqliteTable("tasks", {
     completed: integer("completed", { mode: "boolean" }).default(false).notNull(),
     important: integer("important").default(0).notNull(),
     projectId: integer("project_id").notNull().references(() => projectsTable.id, { onDelete: "cascade" }),
-    createdAt: integer("created_at", { mode: "timestamp" }).default(sql`CURRENT_TIMESTAMP`).notNull(),
+    createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`).notNull(),
 });
 
 export type InsertUser = typeof usersTable.$inferInsert;
