@@ -8,6 +8,7 @@ interface ITaskListContext {
     actions: {
         addAll: (tasks: Task[]) => void;
         addTask: (task: Task) => void;
+        updateTask: (task: Task) => void;
         removeTask: (taskId: number) => void;
     };
 }
@@ -19,6 +20,7 @@ export const TaskListContext = createContext<ITaskListContext>(
         actions: { 
             addAll: ()=>alert("Provider not found"),
             addTask: ()=>alert("Provider not found"),
+            updateTask: ()=>alert("Provider not found"),
             removeTask: ()=>alert("Provider not found"), 
         },
     }

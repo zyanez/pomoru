@@ -15,6 +15,19 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
         setTaskList((oldTasks) => [...oldTasks, task]);
     }, []);
 
+    // Updating a task
+    const updateTask = useCallback(async (task: Task) => {
+        setTaskList(
+            (currentTasks : Task[]) => {
+                return currentTasks.map((oldTask: Task) => {
+                    if (oldTask.id == task.id) {
+                        return task;
+                    }
+                    else {return oldTask;}
+                })
+            });
+    }, []);
+
     // Remove a task by id
     const removeTask = useCallback((taskId: number) => {
         (currentTasks : Task[]) => {
@@ -29,7 +42,7 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
 
   const value = {
     state: { taskList },
-    actions: { addAll, addTask, removeTask },
+    actions: { addAll, addTask, updateTask, removeTask },
   };
 
   return (
