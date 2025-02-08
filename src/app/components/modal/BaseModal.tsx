@@ -15,12 +15,12 @@ interface ModalProps {
     onOpen?: () => void;
 }
 
-export default function Modal({
+export default function BaseModal({
     title,
     children,
     footerAction,
     buttonLabel = "Open Modal",
-    buttonIcon = <Plus className="h-5 w-5 ml-3" />,
+    buttonIcon = <Plus className="h-5 w-5" />,
     isOpen,
     onClose,
     onOpen,
@@ -29,7 +29,7 @@ export default function Modal({
         <>
             <button
                 onClick={() => onOpen?.()}
-                className="flex items-center gap-2 bg-slate-800 text-white px-4 py-2 rounded"
+                className="flex items-center gap-2 bg-slate-800 text-white px-2 py-2 rounded"
             >
                 {buttonIcon}
                 {buttonLabel}

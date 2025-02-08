@@ -14,12 +14,13 @@ export async function GET(req: NextRequest) {
             id: projectsTable.id,
             name: projectsTable.name,
             description: projectsTable.description,
-            ownerId: projectsTable.ownerId,
             type: projectsTable.type,
             completed: projectsTable.completed,
             archived: projectsTable.archived,
+            ownerId: projectsTable.ownerId,
             workedTime: projectsTable.workedTime,
             restedTime: projectsTable.restedTime,
+            createdAt: projectsTable.createdAt,
         })
         .from(projectsTable)
         .where(eq(projectsTable.ownerId, userId))
@@ -68,10 +69,7 @@ export async function POST(req: NextRequest) {
                 completed: 0,
                 type: type
             })
-            .returning({
-                id: projectsTable.id,
-                name: projectsTable.name,
-            })
+            .returning()
             .execute();
 
         return new Response(JSON.stringify(result[0]), {

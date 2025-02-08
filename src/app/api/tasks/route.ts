@@ -19,12 +19,7 @@ export async function GET(req: NextRequest) {
     try{
         // Retrieveing tasks from database by projectId
         const tasks = await db
-            .select({
-                id: tasksTable.id,
-                title: tasksTable.title,
-                completed: tasksTable.completed,
-                important: tasksTable.important
-            })
+            .select()
             .from(tasksTable)
             .all();
 
@@ -75,12 +70,7 @@ export async function POST(req: NextRequest) {
                 important: important,
                 projectId: projectId,
             })
-            .returning({
-                id: tasksTable.id,
-                title: tasksTable.title,
-                important: tasksTable.important,
-                completed: tasksTable.completed,
-            })
+            .returning()
             .execute();
 
         return new Response(JSON.stringify(result[0]), {
@@ -116,12 +106,7 @@ export async function PUT(req: NextRequest) {
             .update(tasksTable)
             .set(body)
             .where(eq(tasksTable.id, id))
-            .returning({
-                id: tasksTable.id,
-                title: tasksTable.title,
-                important: tasksTable.important,
-                completed: tasksTable.completed,
-            });
+            .returning();
 
         return new Response(JSON.stringify(updatedTask), {
             headers: { "Content-Type": "application/json" },

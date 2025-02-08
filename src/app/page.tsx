@@ -8,8 +8,14 @@ import PomodoroTimer from "./components/PomodoroTimer";
 import { useSession } from "next-auth/react";
 import { Body } from "./components/Body";
 import { SelectedProjectProvider } from "./providers/selectedProject/provider";
-import Modal from "./components/modal/modal";
-import { TestTube } from "lucide-react";
+import Modal from "./components/modal/BaseModal";
+import { TestTube, X } from "lucide-react";
+import BaseModal from "./components/modal/BaseModal";
+import LoadingModal from "./components/modal/LoadingModal";
+
+const sleep = (ms : number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export default function Home() {
     const [totalTime, setTotalTime] = useState(0);
@@ -20,7 +26,7 @@ export default function Home() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Header/>
+            <Header />
             <div className="flex flex-1 bg-white">
                 {session ? (
                     <SelectedProjectProvider>
