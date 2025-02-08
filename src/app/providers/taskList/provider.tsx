@@ -29,7 +29,7 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
     }, []);
 
     // Remove a task by id
-    const removeTask = useCallback((taskId: number) => {
+    const deleteTask = useCallback((taskId: number) => {
         (currentTasks : Task[]) => {
             const i = currentTasks.findIndex((task) => task.id == taskId)
             if (i == -1) throw Error("Task not found.")
@@ -42,7 +42,7 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
 
   const value = {
     state: { taskList },
-    actions: { addAll, addTask, updateTask, removeTask },
+    actions: { addAll, addTask, updateTask, deleteTask },
   };
 
   return (
