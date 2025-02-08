@@ -3,6 +3,7 @@ import { Task } from "@/app/types/utils";
 import { Check, Clock, EllipsisVertical, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { UpdateTaskModal } from "../modal/UpdateTaskModal";
+import { DeleteTaskModal } from "../modal/DeleteTaskModal";
 
 export function TaskDetails({task} : {task:Task}){
     const {actions: {updateTask}} = useTaskList()
@@ -48,6 +49,7 @@ export function TaskDetails({task} : {task:Task}){
         <Title title={task.title}/>
         <Importance type={task.important}/>
         <UpdateTaskModal task={task}/>
+        <DeleteTaskModal task={task}/>
     </div>
 }
 function Title({title}:{title:string}){

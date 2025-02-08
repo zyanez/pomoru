@@ -24,8 +24,8 @@ export default function LoadingModal({
         normalLabel: "Confirm",
         loadingLabel: "Confirming..."
     },
-    buttonLabel = "Open Modal",
-    buttonIcon = <Plus className="h-5 w-5 ml-3" />,
+    buttonLabel,
+    buttonIcon,
     onConfirm,
     onOpen,
     onClose

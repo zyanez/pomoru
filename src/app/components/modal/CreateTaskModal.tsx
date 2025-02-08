@@ -58,7 +58,7 @@ export function CreateTaskModal(){
     }
 
     const labels = {
-        normalLabel: "Create Task2",
+        normalLabel: "Create Task",
         loadingLabel: "Creating Task..."
     }
 
