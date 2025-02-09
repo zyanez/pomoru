@@ -30,14 +30,14 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
 
     // Remove a task by id
     const deleteTask = useCallback((taskId: number) => {
-        (currentTasks : Task[]) => {
+        setTaskList((currentTasks : Task[]) => {
             const i = currentTasks.findIndex((task) => task.id == taskId)
             if (i == -1) throw Error("Task not found.")
             return [
                 ...currentTasks.slice(0, i),
                 ...currentTasks.slice(i + 1),
             ]
-        }
+        })
     }, []);
 
   const value = {
