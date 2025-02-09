@@ -13,6 +13,7 @@ interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     onOpen?: () => void;
+    isGhost?: boolean;
 }
 
 export default function BaseModal({
@@ -24,15 +25,18 @@ export default function BaseModal({
     isOpen,
     onClose,
     onOpen,
+    isGhost = false,
 }: ModalProps) {
     return (
         <>
             <button
                 onClick={() => onOpen?.()}
-                className="flex items-center gap-2 bg-slate-800 text-white px-2 py-2 rounded"
+                className={`flex items-center gap-2 rounded ${
+                    isGhost ? "bg-transparent p-2 text-black hover:bg-slate-200" : "bg-slate-800 text-white px-4 py-2 hover:bg-slate-700"
+                }`}
             >
                 {buttonIcon}
-                {buttonLabel}
+                { isGhost ? "" : `${buttonLabel}`}
             </button>
 
             <AnimatePresence>
