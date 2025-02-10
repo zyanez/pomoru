@@ -5,7 +5,7 @@ interface ModalProps {
     title?: string;
     children: React.ReactNode;
     footerAction?: {
-        label: string;
+        label: string | React.ReactNode;
         onClick: () => void;
     };
     buttonLabel?: string;
