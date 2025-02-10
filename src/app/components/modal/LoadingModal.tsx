@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus } from "lucide-react";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import BaseModal from "./BaseModal";
 
@@ -13,8 +13,8 @@ interface LoadingModalProps {
     onConfirm: () => Promise<boolean>;
     buttonLabel?: string;
     buttonIcon?: React.ReactNode;
-    onOpen?: () => void
-    onClose?: () => void
+    onOpen?: () => void;
+    onClose?: () => void;
 }
 
 export default function LoadingModal({
@@ -34,14 +34,14 @@ export default function LoadingModal({
     const [isOpen, setIsOpen] = useState(false);
 
     const handleClosing = () => {
-        onClose && onClose();
+        if (onClose) onClose();
         setIsOpen(false);
-    }
-
+    };
+    
     const handleOpening = () => {
-        onOpen && onOpen();
+        if (onOpen) onOpen();
         setIsOpen(true);
-    }
+    };
 
     const handleConfirm = async () => {
         setIsLoading(true);
@@ -54,9 +54,21 @@ export default function LoadingModal({
     }
 
     const footerAction = {
-        label : isLoading ? confirmLabels.loadingLabel : confirmLabels.normalLabel, 
-        onClick : handleConfirm
-    }
+        label: (
+            <div className="flex items-center gap-2">
+                {isLoading && (
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                    >
+                        <Loader2 className="w-5 h-5" />
+                    </motion.div>
+                )}
+                {isLoading ? confirmLabels.loadingLabel : confirmLabels.normalLabel}
+            </div>
+        ),
+        onClick: handleConfirm,
+    };
 
     return (
         <BaseModal
