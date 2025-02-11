@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Archive, ArchiveRestore, Check, Cog, User, X } from "lucide-react";
 import { useProjectList } from "@/app/providers/projectList/use";
-import LoadingModal from "../LoadingModal";
+import LoadingModal from "./LoadingModal";
 import { Project } from "@/app/types/utils";
 import { ApiCall } from "@/app/calls/ApiCall";
 

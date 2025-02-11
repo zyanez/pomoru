@@ -9,7 +9,7 @@ import { Logo } from "./Logo";
 import { APP_VERSION } from "../config/version";
 import { ApiCall } from "../calls/ApiCall";
 import { useSession } from "next-auth/react";
-import { CreateProjectModal } from "./modal/project/CreateProjectModal";
+import { CreateProjectModal } from "./modal/CreateProjectModal";
 
 export function Sidebar() {
     const { state:{projectList, selectedProject}, actions: {load, selectProject} } = useProjectList();

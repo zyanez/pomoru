@@ -2,8 +2,8 @@ import { useTaskList } from "@/app/providers/taskList/use";
 import { Task } from "@/app/types/utils";
 import { Check, Clock, EllipsisVertical, X } from "lucide-react";
 import { useMemo, useState } from "react";
-import { UpdateTaskModal } from "../modal/task/UpdateTaskModal";
-import { DeleteTaskModal } from "../modal/task/DeleteTaskModal";
+import { UpdateTaskModal } from "../modal/UpdateTaskModal";
+import { DeleteTaskModal } from "../modal/DeleteTaskModal";
 
 export function TaskDetails({task} : {task:Task}){
     const {actions: {updateTask}} = useTaskList()

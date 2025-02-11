@@ -6,8 +6,8 @@ import { Project } from "../types/utils";
 import { useState } from "react";
 import { TypeIcon } from "./TypeIcon";
 import BaseModal from "./modal/BaseModal";
-import { DeleteProjectModal } from "./modal/project/DeleteProjectModal";
-import { UpdateProjectModal } from "./modal/project/UpdateProjectModal";
+import { DeleteProjectModal } from "./modal/DeleteProjectModal";
+import { UpdateProjectModal } from "./modal/UpdateProjectModal";
 
 export function ProjectDetails({
     selectedProject,

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { User } from "lucide-react";
-import LoadingModal from "../LoadingModal";
+import LoadingModal from "./LoadingModal";
 import { useProjectList } from "@/app/providers/projectList/use";
 import { useSession } from "next-auth/react";
 import { ApiCall } from "@/app/calls/ApiCall";

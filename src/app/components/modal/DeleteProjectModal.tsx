@@ -1,36 +1,37 @@
 
 import { Trash } from "lucide-react";
-import { useTaskList } from "@/app/providers/taskList/use";
-import LoadingModal from "../LoadingModal";
-import { Task } from "@/app/types/utils";
+import { useProjectList } from "@/app/providers/projectList/use";
+import LoadingModal from "./LoadingModal";
+import { Project } from "@/app/types/utils";
 import { ApiCall } from "@/app/calls/ApiCall";
 
-export function DeleteTaskModal({task} : {task:Task}){
-    const {actions : {deleteTask}} = useTaskList()
+export function DeleteProjectModal({project} : {project:Project}){
+    const {actions : {deleteProject, selectProject}} = useProjectList()
     
     const handleSubmit : () => Promise<boolean> = async () => {
         try {
-            const response = await ApiCall.deleteTask(task.id)
-            deleteTask(response.id);
+            const response = await ApiCall.deleteProject(project.id)
+            deleteProject(response.id);
+            selectProject(null)
 
             return true;
         } catch (error) {
-            console.error("Error creating task:", error);
+            console.error("Error creating project:", error);
             let error_message = "No message"
             if (error instanceof Error)
                 error_message = error.message
-            alert("There was an error during task creation. " + error_message);
+            alert("There was an error during project creation. " + error_message);
             return false;
         }
     };
 
     const labels = {
-        normalLabel: "Delete Task",
-        loadingLabel: "Deleting Task..."
+        normalLabel: "Delete Project",
+        loadingLabel: "Deleting Project..."
     }
 
     return <LoadingModal
-        title={"Delete Task"}
+        title={"Delete Project"}
         buttonLabel=""
         buttonIcon={<Trash className="h-4 w-4" />}
         confirmLabels={labels}
@@ -41,7 +42,7 @@ export function DeleteTaskModal({task} : {task:Task}){
                 Title
             </label>
             <p>
-                {task.title}
+                {project.name}
             </p>
 
         </div>

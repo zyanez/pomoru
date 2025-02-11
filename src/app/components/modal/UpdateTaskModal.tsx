@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Check, Cog, User, X } from "lucide-react";
 import { useTaskList } from "@/app/providers/taskList/use";
-import LoadingModal from "../LoadingModal";
+import LoadingModal from "./LoadingModal";
 import { Task } from "@/app/types/utils";
 import { ApiCall } from "@/app/calls/ApiCall";
 
