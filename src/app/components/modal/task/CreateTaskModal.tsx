@@ -1,53 +1,38 @@
 
-// task is null -> insert
-// task is not null -> update/delete
-
-import { useMemo, useState } from "react";
-import BaseModal from "../BaseModal";
-import { ClipboardPlus, User, X } from "lucide-react";
+import { useState } from "react";
+import { User } from "lucide-react";
 import { useTaskList } from "@/app/providers/taskList/use";
-import { useSelectedProject } from "@/app/providers/selectedProject/use";
 import LoadingModal from "../LoadingModal";
-
+import { ApiCall } from "@/app/calls/ApiCall";
+import { useProjectList } from "@/app/providers/projectList/use";
 
 export function CreateTaskModal(){
     const {actions : {addTask}} = useTaskList()
-    const {state : {selectedProject}} = useSelectedProject()
+    const {state : {selectedProject}} = useProjectList()
     const [title, setTitle] = useState("");
     const [important, setImportant] = useState(0);
 
-    const createTask = async () => {
-        if (selectedProject == null) throw new Error("No project selected");
-        const response = await fetch("/api/tasks", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                    title: title,
-                    important: important,
-                    projectId: selectedProject.id
-            }),
-        });
-        if (!response.ok) throw new Error("Internal server error");
-        
-        const newTask = await response.json();
-        addTask(newTask);
-    };
-    
     const handleSubmit : () => Promise<boolean> = async () => {
         try {
-            if (title.trim()) {
-                await createTask();
-                resetFields();
-                return true;
-            } else {
-                alert("Task title is required.");
-                return false;
+            if (selectedProject == null) {
+                alert("No project is selected.");
+                return false
             }
+            if (title.trim() == "") { 
+                alert("Title is required.");
+                return false
+            }
+
+            const newTask = await ApiCall.createTask(title, important, selectedProject.id);
+            addTask(newTask);
+
+            return true;
         } catch (error) {
             console.error("Error creating task:", error);
-            alert("There was an error creating the task. ");
+            let error_message = "No message"
+            if (error instanceof Error)
+                error_message = error.message
+            alert("There was an error during task creation. " + error_message);
             return false;
         }
     };
@@ -67,7 +52,7 @@ export function CreateTaskModal(){
         title={"Create Task"}
         confirmLabels={labels}
         onConfirm={handleSubmit}
-        onClose={resetFields}     >
+        onOpen={resetFields}     >
         <div>
             <label className="block text-m font-medium text-slate-700 mb-2">
                 Title
