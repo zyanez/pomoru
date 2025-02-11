@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
         if (name == undefined)      error_message += "Name is missing. "
         if (type == undefined)      error_message += "Type is missing. "
         if (ownerId == undefined)   error_message += "Owner id is missing. "
-        if (error_message == "") {
+        if (error_message != "") {
             return new Response(JSON.stringify({ error: error_message }), {
                 status: 400,
                 headers: { "Content-Type": "application/json" },

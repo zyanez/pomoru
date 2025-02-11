@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
         let error_message = "";
         if (title == undefined)     error_message += "Title is missing. ";
         if (important == undefined) error_message += "Importance is missing. ";
+        if (important < 0) error_message += "importance is not valid. ";
         if (projectId == undefined) error_message += "Project id is missing. ";
         if (error_message != "") {
             return new Response(JSON.stringify({ error: error_message }), {
