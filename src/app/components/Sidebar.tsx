@@ -9,7 +9,7 @@ import { Logo } from "./Logo";
 import { APP_VERSION } from "../config/version";
 import { ApiCall } from "../calls/ApiCall";
 import { useSession } from "next-auth/react";
-import { CreateProjectModal2 } from "./modal/project/CreateProjectModal2";
+import { CreateProjectModal } from "./modal/project/CreateProjectModal";
 
 export function Sidebar() {
     const { state:{projectList, selectedProject}, actions: {load, selectProject} } = useProjectList();
@@ -52,7 +52,7 @@ export function Sidebar() {
                         <h2 className="px-4 text-base font-semibold tracking-tight">
                             Projects
                         </h2>
-                        <CreateProjectModal2 />
+                        <CreateProjectModal />
                     </div>
                     {loading ? (
                         <div className="flex items-center justify-center h-16">

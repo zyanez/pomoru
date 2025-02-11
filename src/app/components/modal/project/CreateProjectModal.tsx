@@ -6,8 +6,8 @@ import { useProjectList } from "@/app/providers/projectList/use";
 import { useSession } from "next-auth/react";
 import { ApiCall } from "@/app/calls/ApiCall";
 
-export function CreateProjectModal2(){
-    const { actions: { addProject, selectProject } } = useProjectList();
+export function CreateProjectModal(){
+    const { actions: { addProject } } = useProjectList();
     const { data: session } = useSession();
     const [name, setName] = useState("");
     const [type, setType] = useState<"Work" | "Personal">("Personal");
@@ -31,9 +31,10 @@ export function CreateProjectModal2(){
             return true;
         } catch (error) {
             console.error("Error creating task:", error);
+            let error_message = "No message"
             if (error instanceof Error)
-                alert("There was an error during project creation: " + JSON.stringify(error.message));
-            else alert("There was an error during project creation. No message");
+                error_message = error.message
+            alert("There was an error during task creation. " + error_message);
             return false;
         }
     };
