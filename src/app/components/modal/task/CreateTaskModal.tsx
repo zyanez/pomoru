@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { User } from "lucide-react";
+import { Plus, User } from "lucide-react";
 import { useTaskList } from "@/app/providers/taskList/use";
 import LoadingModal from "../LoadingModal";
 import { ApiCall } from "@/app/calls/ApiCall";
@@ -49,6 +49,7 @@ export function CreateTaskModal(){
 
 
     return <LoadingModal
+        buttonLabel="Add Task"
         title={"Create Task"}
         confirmLabels={labels}
         onConfirm={handleSubmit}

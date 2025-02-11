@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { ApiCall } from "@/app/calls/ApiCall";
 
 export function CreateProjectModal(){
-    const { actions: { addProject } } = useProjectList();
+    const { actions: { addProject, selectProject } } = useProjectList();
     const { data: session } = useSession();
     const [name, setName] = useState("");
     const [type, setType] = useState<"Work" | "Personal">("Personal");
@@ -26,7 +26,7 @@ export function CreateProjectModal(){
 
             const newProject = await ApiCall.createProject({name, type, ownerId});
             addProject(newProject); // also selects new project
-            //selectProject(newProject);
+            selectProject(newProject);
 
             return true;
         } catch (error) {
@@ -50,6 +50,7 @@ export function CreateProjectModal(){
     }
 
     return <LoadingModal
+        buttonLabel="Add Project"
         title={"Create Task"}
         confirmLabels={labels}
         onConfirm={handleSubmit}
