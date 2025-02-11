@@ -3,11 +3,11 @@
 // task is not null -> update/delete
 
 import { useMemo, useState } from "react";
-import BaseModal from "./BaseModal";
+import BaseModal from "../BaseModal";
 import { Check, ClipboardPlus, Cog, User, X } from "lucide-react";
 import { useTaskList } from "@/app/providers/taskList/use";
 import { useSelectedProject } from "@/app/providers/selectedProject/use";
-import LoadingModal from "./LoadingModal";
+import LoadingModal from "../LoadingModal";
 import { Task } from "@/app/types/utils";
 
 

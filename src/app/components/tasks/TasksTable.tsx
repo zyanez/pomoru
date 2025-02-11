@@ -4,7 +4,7 @@ import { Task } from "../../types/utils";
 import { TaskDetails } from "./TaskDetails";
 import { useTaskList } from "@/app/providers/taskList/use";
 import { useSelectedProject } from "@/app/providers/selectedProject/use";
-import { CreateTaskModal } from "../modal/CreateTaskModal";
+import { CreateTaskModal } from "../modal/task/CreateTaskModal";
 
 export function TasksTable(){
     const {state : {taskList}, actions: {addAll}} = useTaskList()

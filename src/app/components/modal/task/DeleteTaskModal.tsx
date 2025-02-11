@@ -1,7 +1,7 @@
 
 import { Trash } from "lucide-react";
 import { useTaskList } from "@/app/providers/taskList/use";
-import LoadingModal from "./LoadingModal";
+import LoadingModal from "../LoadingModal";
 import { Task } from "@/app/types/utils";
 
 
