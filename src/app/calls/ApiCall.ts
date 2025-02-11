@@ -91,7 +91,7 @@ export const ApiCall = {
             return projectPromise;
         },
     updateProject: 
-        async (projectId: number, newAttributes: IUpdateProject) : Promise<Task> =>  {
+        async (projectId: number, newAttributes: IUpdateProject) : Promise<Project> =>  {
             const response = await fetch("/api/project/"+projectId, {
                 method: "PUT",
                 headers: {

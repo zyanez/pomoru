@@ -5,6 +5,8 @@ import { Clock, TagsIcon, EllipsisVertical } from "lucide-react";
 import { Project } from "../types/utils";
 import { useState } from "react";
 import { TypeIcon } from "./TypeIcon";
+import { DeleteProjectModal } from "./modal/project/DeleteProjectModal";
+import { UpdateProjectModal } from "./modal/project/UpdateProjectModal";
 
 export function ProjectDetails({
     selectedProject,
@@ -61,6 +63,8 @@ export function ProjectDetails({
                         {selectedProject.description}
                     </div>
                 </div>
+                <UpdateProjectModal project={selectedProject} />
+                <DeleteProjectModal project={selectedProject} />
                 <button
                     onClick={handleProjectConfig} 
                     className="inline-flex items-center text-black justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
