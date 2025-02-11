@@ -40,7 +40,7 @@ export function Sidebar() {
     };
 
     return (
-        <div className="pb-12 w-64 border-r border-gray-200">
+        <div className="pb-12 w-64 border-r border-gray-200 hidden md:block">
             <div className="space-y-4">
                 <div className="py-4 px-3 border-b border-slate-200 hidden sm:block">
                     <div className="px-4 flex flex-row gap-2 text-slate-800 items-center">

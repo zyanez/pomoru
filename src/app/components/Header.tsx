@@ -46,9 +46,9 @@ export default function Header() {
                                     alt="User avatar"
                                     width={720}
                                     height={720}
-                                    className="h-8 w-8 rounded-full mr-2"
+                                    className="h-8 w-8 rounded-full mr-2 "
                                 />
-                                <span className="text-sm text-slate-800 font-medium">
+                                <span className="text-sm text-slate-800 font-medium block xs:hidden">
                                     {truncate(session.user?.name || "User", 10)}
                                 </span>
                             </motion.button>

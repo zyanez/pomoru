@@ -49,10 +49,8 @@ export default function PomodoroTimer({
     onPomodoroUpdate,
 }: PomodoroTimerProps) {
     const { state:{selectedProject}, actions: { setSelectedProject } } = useSelectedProject();
-    // pomodoroTypes[0] (light) | pomodoroTypes[1] (standard) | pomodoroTypes[3] (intensive)
     const [pomodoroType, setPomodoroType] = useState(pomodoroTypes[1]);
     const [pomodorosBeforeLongBreak] = useState(4);
-
     const [phase, setPhase] = useState<Phase>("FOCUS");
     const [timeLeft, setTimeLeft] = useState(pomodoroType.focusTime);
     const [isActive, setIsActive] = useState(false);
@@ -150,10 +148,6 @@ export default function PomodoroTimer({
     // Toggle for Timer
     const toggleTimer = () => {
         setIsActive((prev) => !prev);
-    };
-
-    const handleInitialPlay = () => {
-        setShowTimer(true);
     };
 
     // Reset Timer Function
@@ -300,7 +294,7 @@ export default function PomodoroTimer({
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -20, opacity: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="w-full md:w-96  sm:border-l border-slate-200 bg-white p-4 md:p-8 overflow-auto"
+            className="w-full md:w-96 border-t sm:border-t-0 sm:border-l border-slate-200 bg-white p-8 overflow-auto"
         >
             <AnimatePresence mode="wait">
                 {showTimer ? (
