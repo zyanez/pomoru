@@ -1,37 +1,25 @@
 
 import { Trash } from "lucide-react";
 import { useTaskList } from "@/app/providers/taskList/use";
-import LoadingModal from "./LoadingModal";
+import LoadingModal from "../LoadingModal";
 import { Task } from "@/app/types/utils";
-
+import { ApiCall } from "@/app/calls/ApiCall";
 
 export function DeleteTaskModal({task} : {task:Task}){
     const {actions : {deleteTask}} = useTaskList()
-
-    const deleteTaskAndCall = async () => {
-        const response = await fetch("/api/tasks", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                taskId: task.id,
-            }),
-        });
-        if (!response.ok) throw new Error("Internal server error");
-        
-        const taskId = await response.json();
-        deleteTask(taskId);
-    };
     
     const handleSubmit : () => Promise<boolean> = async () => {
         try {
-            await deleteTaskAndCall();
-            return true;
+            const response = await ApiCall.deleteTask(task.id)
+            deleteTask(response.id);
 
+            return true;
         } catch (error) {
-            console.error("Error deleting task:", error);
-            alert("There was an error deleting the task. " + error);
+            console.error("Error creating task:", error);
+            let error_message = "No message"
+            if (error instanceof Error)
+                error_message = error.message
+            alert("There was an error during task creation. " + error_message);
             return false;
         }
     };

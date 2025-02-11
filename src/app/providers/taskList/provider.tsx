@@ -6,7 +6,7 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
     const [taskList, setTaskList] = useState<Task[]>([]);
 
     // Inserting a list of tasks
-    const addAll = useCallback(async (tasks: Task[]) => {
+    const load = useCallback(async (tasks: Task[]) => {
         setTaskList(tasks);
     }, []);
 
@@ -30,19 +30,19 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
 
     // Remove a task by id
     const deleteTask = useCallback((taskId: number) => {
-        (currentTasks : Task[]) => {
+        setTaskList((currentTasks : Task[]) => {
             const i = currentTasks.findIndex((task) => task.id == taskId)
             if (i == -1) throw Error("Task not found.")
             return [
                 ...currentTasks.slice(0, i),
                 ...currentTasks.slice(i + 1),
             ]
-        }
+        })
     }, []);
 
   const value = {
     state: { taskList },
-    actions: { addAll, addTask, updateTask, deleteTask },
+    actions: { load, addTask, updateTask, deleteTask },
   };
 
   return (

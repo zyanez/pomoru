@@ -6,6 +6,8 @@ import { Project } from "../types/utils";
 import { useState } from "react";
 import { TypeIcon } from "./TypeIcon";
 import BaseModal from "./modal/BaseModal";
+import { DeleteProjectModal } from "./modal/project/DeleteProjectModal";
+import { UpdateProjectModal } from "./modal/project/UpdateProjectModal";
 
 export function ProjectDetails({
     selectedProject,
@@ -55,6 +57,8 @@ export function ProjectDetails({
                         {selectedProject.description}
                     </div>
                 </div>
+                <UpdateProjectModal project={selectedProject} />
+                <DeleteProjectModal project={selectedProject} />
                 <BaseModal
                     isOpen={isOpen}
                     onOpen={() => setIsOpen(true)}
