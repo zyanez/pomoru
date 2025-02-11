@@ -18,8 +18,7 @@ export function UpdateTaskModal({task} : {task:Task}){
                 alert("Task title is required.");
                 return false;
             }
-
-            const updatedTask = await ApiCall.updateTask(task.id, title, important, completed)
+            const updatedTask = await ApiCall.updateTask(task.id, {title, important, completed})
             updateTask(updatedTask);
 
             return true;

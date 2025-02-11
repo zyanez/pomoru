@@ -23,7 +23,7 @@ export function CreateTaskModal(){
                 return false
             }
 
-            const newTask = await ApiCall.createTask(title, important, selectedProject.id);
+            const newTask = await ApiCall.createTask({title, important, projectId: selectedProject.id});
             addTask(newTask);
 
             return true;

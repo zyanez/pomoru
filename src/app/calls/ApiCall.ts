@@ -1,18 +1,14 @@
-import { Project, Task } from "../types/utils";
+import { IInsertProject, IInsertTask, IUpdateProject, IUpdateTask, Project, Task } from "../types/utils";
 
 export const ApiCall = {
     createTask: 
-        async (title: string, important : number, projectId: number) : Promise<Task> => {
+        async (attributes: IInsertTask) : Promise<Task> => {
             const response = await fetch("/api/task", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                        title: title,
-                        important: important,
-                        projectId: projectId
-                }),
+                body: JSON.stringify(attributes),
             });
             const body = await response.json()
             if (!response.ok) {
@@ -21,18 +17,13 @@ export const ApiCall = {
             return body;
         },
     updateTask: 
-        async (id: number, title: string | null, important: number | null, completed: boolean | null) : Promise<Task> =>  {
-            const response = await fetch("/api/task/"+id, {
+        async (taskId: number, newAttributes: IUpdateTask) : Promise<Task> =>  {
+            const response = await fetch("/api/task/"+taskId, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    id: id,
-                    title: title,
-                    completed: completed,
-                    important: important,
-                }),
+                body: JSON.stringify(newAttributes),
             });
             const body = await response.json()
             if (!response.ok) {
@@ -41,15 +32,12 @@ export const ApiCall = {
             return body[0];
         },
     deleteTask: 
-        async (id: number) : Promise<{id:number}>  => {
-            const response = await fetch("/api/task/"+id, {
+        async (taskId: number) : Promise<{id:number}>  => {
+            const response = await fetch("/api/task/"+taskId, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    taskId: id,
-                }),
             });
             const body = await response.json()
             if (!response.ok) {
@@ -58,14 +46,13 @@ export const ApiCall = {
             return body;
         },
     completeTask: 
-        async (id: number) : Promise<Task>  => {
-            const response = await fetch("/api/task/"+id, {
+        async (taskId: number) : Promise<Task>  => {
+            const response = await fetch("/api/task/"+taskId, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    id: id,
                     completed: true,
                 }),
             });
@@ -86,17 +73,13 @@ export const ApiCall = {
             return body;
         },
     createProject: 
-        async (name: string, type: string, ownerId: string) : Promise<Project> => {
+        async (attributes: IInsertProject) : Promise<Project> => {
             const response = await fetch("/api/project", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    name: name,
-                    type: type,
-                    ownerId: ownerId,
-                }),
+                body: JSON.stringify(attributes),
             });
             if (!response.ok) {
                 const body: {message: string} = await response.json()
@@ -106,6 +89,35 @@ export const ApiCall = {
 //            return body;
             const projectPromise: Promise<Project> = response.json()
             return projectPromise;
+        },
+    updateProject: 
+        async (projectId: number, newAttributes: IUpdateProject) : Promise<Task> =>  {
+            const response = await fetch("/api/project/"+projectId, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newAttributes),
+            });
+            const body = await response.json()
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText} - ${body.message}`);
+            }
+            return body[0];
+        },
+    deleteProject: 
+        async (projectId: number) : Promise<{id:number}>  => {
+            const response = await fetch("/api/project/"+projectId, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const body = await response.json()
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText} - ${body.message}`);
+            }
+            return body;
         },
     getProjectsByUserId: 
         async (userId: string) : Promise<Project[]> =>  {

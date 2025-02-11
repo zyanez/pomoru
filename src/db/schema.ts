@@ -36,7 +36,22 @@ export type SelectUser = typeof usersTable.$inferSelect;
 
 export type InsertProject = typeof projectsTable.$inferInsert;
 export type SelectProject = typeof projectsTable.$inferSelect;
+export type UpdateProject = {
+    name?: string,
+    description?: string,
+    type?: string,
+    completed?: boolean,
+    archived?: boolean,
+    ownerId?: string,
+    workedTime?: number,
+    restedTime?: number,
+    createdAt?: string,
+}
 
 export type InsertTask = typeof tasksTable.$inferInsert;
 export type SelectTask = typeof tasksTable.$inferSelect;
-
+export type UpdateTask = {
+    title?: string, 
+    important?: number, 
+    completed?: boolean
+}

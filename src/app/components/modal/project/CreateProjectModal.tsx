@@ -24,7 +24,7 @@ export function CreateProjectModal(){
                 return false
             }
 
-            const newProject = await ApiCall.createProject(name, type, ownerId)
+            const newProject = await ApiCall.createProject({name, type, ownerId});
             addProject(newProject); // also selects new project
             //selectProject(newProject);
 
