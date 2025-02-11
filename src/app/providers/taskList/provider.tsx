@@ -6,7 +6,7 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
     const [taskList, setTaskList] = useState<Task[]>([]);
 
     // Inserting a list of tasks
-    const addAll = useCallback(async (tasks: Task[]) => {
+    const load = useCallback(async (tasks: Task[]) => {
         setTaskList(tasks);
     }, []);
 
@@ -42,7 +42,7 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
 
   const value = {
     state: { taskList },
-    actions: { addAll, addTask, updateTask, deleteTask },
+    actions: { load, addTask, updateTask, deleteTask },
   };
 
   return (

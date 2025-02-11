@@ -6,7 +6,7 @@ interface ITaskListContext {
         taskList: Task[]     // Null if no project is selected
     };
     actions: {
-        addAll: (tasks: Task[]) => void;
+        load: (tasks: Task[]) => void;
         addTask: (task: Task) => void;
         updateTask: (task: Task) => void;
         deleteTask: (taskId: number) => void;
@@ -18,7 +18,7 @@ export const TaskListContext = createContext<ITaskListContext>(
     {
         state: { taskList: [] },
         actions: { 
-            addAll: ()=>alert("Provider not found"),
+            load: ()=>alert("Provider not found"),
             addTask: ()=>alert("Provider not found"),
             updateTask: ()=>alert("Provider not found"),
             deleteTask: ()=>alert("Provider not found"), 

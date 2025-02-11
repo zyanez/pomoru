@@ -1,31 +1,25 @@
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Task } from "../../types/utils";
 import { TaskDetails } from "./TaskDetails";
 import { useTaskList } from "@/app/providers/taskList/use";
-import { useSelectedProject } from "@/app/providers/selectedProject/use";
 import { CreateTaskModal } from "../modal/task/CreateTaskModal";
+import { ApiCall } from "@/app/calls/ApiCall";
+import { useProjectList } from "@/app/providers/projectList/use";
 
 export function TasksTable(){
-    const {state : {taskList}, actions: {addAll}} = useTaskList()
-    const {state : {selectedProject}} = useSelectedProject()
+    const {state : {taskList}, actions: {load}} = useTaskList()
+    const {state : {selectedProject}} = useProjectList();
     const [loading, setLoading] = useState(true)
-    
+
     useEffect(() => {
         const fetchTasks = async () => {
-            setLoading(true)
             try {
-                if (selectedProject == null) throw new Error("Failed to create task");
-                const response = await fetch("/api/tasks/"+selectedProject?.id);
-                if (!response.ok) {
-                    console.log("error?")
-                    throw new Error(`Error: ${response.statusText}`);
-                }
-
-                const data: Task[] = await response.json();
-                addAll(data);
+                setLoading(true)
+                if (selectedProject == null) throw new Error("Failed to create task. No project id.");
+                const tasks = await ApiCall.getTasksByProjectId(selectedProject?.id)
+                load(tasks);
             } catch (error) {
-                console.error("Error fetching projects: ", error);
+                console.error("Error fetching tasks: ", error);
             } finally {
                 setLoading(false);
             }
