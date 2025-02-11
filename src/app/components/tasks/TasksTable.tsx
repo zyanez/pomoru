@@ -2,7 +2,7 @@ import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TaskDetails } from "./TaskDetails";
 import { useTaskList } from "@/app/providers/taskList/use";
-import { CreateTaskModal } from "../modal/task/CreateTaskModal";
+import { CreateTaskModal } from "../modal/CreateTaskModal";
 import { ApiCall } from "@/app/calls/ApiCall";
 import { useProjectList } from "@/app/providers/projectList/use";
 

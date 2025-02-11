@@ -2,9 +2,10 @@
 import { useState } from "react";
 import { Plus, User } from "lucide-react";
 import { useTaskList } from "@/app/providers/taskList/use";
-import LoadingModal from "../LoadingModal";
+import LoadingModal from "./LoadingModal";
 import { ApiCall } from "@/app/calls/ApiCall";
 import { useProjectList } from "@/app/providers/projectList/use";
+import BaseModal from "./BaseModal";
 
 export function CreateTaskModal(){
     const {actions : {addTask}} = useTaskList()
