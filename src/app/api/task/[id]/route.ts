@@ -19,10 +19,10 @@ export async function GET(req: NextRequest) {
 
         // RETRIEVE TASK ID
         const pathname = req.nextUrl.pathname
-        const taskId = parseInt(pathname.split("/")[3]) //["","api","project",":id"]
+        const taskId = parseInt(pathname.split("/")[3]) //["","api","task",":id"]
         if (taskId == null)
             return new Response(JSON.stringify({
-                    "error": "Bad Request : Invalid project id"
+                    "error": "Bad Request : Invalid task id"
                 }),{
                     status: 400,
                     headers: { "Content-Type": "application/json" },
@@ -53,8 +53,6 @@ export async function GET(req: NextRequest) {
     }
 }
 
-
-
 //UPDATE
 export async function PUT(req: NextRequest) {
     try{
@@ -69,7 +67,7 @@ export async function PUT(req: NextRequest) {
 
         // RETRIEVE TASK ID
         const pathname = req.nextUrl.pathname
-        const id = parseInt(pathname.split("/")[3]) //["","api","project",":id"]
+        const id = parseInt(pathname.split("/")[3]) //["","api","task",":id"]
         if (id == null)
             return new Response(JSON.stringify({
                     "error": "Bad Request : Invalid task id"
@@ -79,15 +77,17 @@ export async function PUT(req: NextRequest) {
             });
 
         // VALIDATE BODY
+        // only checks if has any column of table
+        const hasProps = (o: Object, props: string[]) => {
+            for (const prop of props)
+                if (o.hasOwnProperty(prop)) return true
+            return false
+        }
         const body = await req.json();
-        const {title, completed, important, projectId, createdAt} = body
-
-        if (title == undefined 
-            && important == undefined 
-            && projectId == undefined 
-            && completed == undefined
-            && createdAt == undefined
-        ){
+        const taskColumn: string[] = [
+            "id","title","important","projectId","completed","createdAt",
+        ]
+        if (!hasProps(body, taskColumn)){
             return new Response(JSON.stringify({ error: "No valid attributes." }), {
                 status: 400,
                 headers: { "Content-Type": "application/json" },
@@ -133,7 +133,7 @@ export async function DELETE(req: NextRequest) {
 
         // RETRIEVE TASK ID
         const pathname = req.nextUrl.pathname
-        const id = parseInt(pathname.split("/")[3]) //["","api","project",":id"]
+        const id = parseInt(pathname.split("/")[3]) //["","api","task",":id"]
         if (id == null)
             return new Response(JSON.stringify({
                     "error": "Bad Request : Invalid task id"
