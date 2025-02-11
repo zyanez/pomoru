@@ -12,6 +12,7 @@ import Modal from "./components/modal/BaseModal";
 import { TestTube, X } from "lucide-react";
 import BaseModal from "./components/modal/BaseModal";
 import LoadingModal from "./components/modal/LoadingModal";
+import { ProjectListProvider } from "./providers/projectList/provider";
 
 const sleep = (ms : number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -29,13 +30,13 @@ export default function Home() {
             <Header />
             <div className="flex flex-1 bg-white">
                 {session ? (
-                    <SelectedProjectProvider>
+                    <ProjectListProvider>
                         <Sidebar />
                         <main className="flex-1 flex flex-col md:flex-row overflow-auto">
                             <Body/>
                             <PomodoroTimer onTimeUpdate={setTotalTime} onPomodoroUpdate={setTotalPomodoro} />
                         </main>
-                    </SelectedProjectProvider>
+                    </ProjectListProvider>
                 ) : (
                     "No account..."
                 )}
