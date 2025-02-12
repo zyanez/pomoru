@@ -100,9 +100,9 @@ export async function PUT(req: NextRequest) {
             .set(body)
             .where(eq(tasksTable.id, id))
             .returning();
-
+            
         // RETURN RESULT
-        return new Response(JSON.stringify(updatedTask), {
+        return new Response(JSON.stringify(updatedTask[0]), {
             status: 200,
             headers: { "Content-Type": "application/json" },
         });
