@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Play, Pause, RefreshCcw, Settings, Loader, Clock, Square } from "lucide-react";
-import { Play, Pause, RefreshCcw, Settings, Loader, Clock, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProjectList } from "../providers/projectList/use";
 import { Project } from "../types/utils";
@@ -53,9 +52,6 @@ export default function PomodoroTimer({
 
     const {state : {selectedProject}} = useProjectList()
     const [lockedInProject, setLockedInProject] = useState<Project | null>(null);
-    const {
-        state: { selectedProject },
-    } = useProjectList();
     // pomodoroTypes[0] (light) | pomodoroTypes[1] (standard) | pomodoroTypes[3] (intensive)
     const [pomodoroType, setPomodoroType] = useState(pomodoroTypes[1]);
     const [pomodorosBeforeLongBreak] = useState(4);
@@ -434,6 +430,51 @@ export default function PomodoroTimer({
                                  <Settings className="h-4 w-4" />
                              </Button>
                          </motion.div>
+                         
+                         <motion.div
+                            className="flex justify-center gap-4 mb-2"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                        >
+                            {lockedInProject != null 
+                                ? lockedInProject.name 
+                                : selectedProject != null 
+                                    ? selectedProject.name 
+                                    : "Select a project to start Pomoru!!!"
+                            }
+                        </motion.div>
+
+                         <div className="flex flex-row justify-between gap-4 items-center mb-4">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3, duration: 0.5 }}
+                                className="bg-slate-100 rounded-lg p-3 w-1/2"
+                            >
+                                <h3 className="text-xs font-medium text-slate-500 mb-1">
+                                    Completed
+                                </h3>
+                                <p className="text-xl font-bold text-slate-900">
+                                    {completedPomodoros}
+                                </p>
+                            </motion.div>
+
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4, duration: 0.5 }}
+                                className="bg-slate-100 rounded-lg p-3 w-1/2"
+                            >
+                                <h3 className="text-xs font-medium text-slate-500 mb-1">
+                                    Focus Time Spent
+                                </h3>
+                                <p className="text-xl font-bold text-slate-900">
+                                    {formatFullTime(focusTimeSpent)}
+                                </p>
+                            </motion.div>
+                        </div>
                          <motion.div
                             key={motivationalPhrase}
                             initial={{ opacity: 0, y: 10 }}
@@ -448,57 +489,13 @@ export default function PomodoroTimer({
                                 ` ${motivationalPhrase} `
                             )}
                         </motion.div>
-
-                         {/* <div className="flex flex-row justify-between gap-4 items-center mb-4">
-                             <motion.div
-                                 initial={{ opacity: 0, y: 20 }}
-                                 animate={{ opacity: 1, y: 0 }}
-                                 transition={{ delay: 0.3, duration: 0.5 }}
-                                 className="bg-slate-100 rounded-lg p-3 w-1/2"
-                             >
-                                 <h3 className="text-xs font-medium text-slate-500 mb-1">
-                                     Completed
-                                 </h3>
-                                 <p className="text-xl font-bold text-slate-900">
-                                     {completedPomodoros}
-                                 </p>
-                             </motion.div>
-
-                             <motion.div
-                                 initial={{ opacity: 0, y: 20 }}
-                                 animate={{ opacity: 1, y: 0 }}
-                                 transition={{ delay: 0.4, duration: 0.5 }}
-                                 className="bg-slate-100 rounded-lg p-3 w-1/2"
-                             >
-                                 <h3 className="text-xs font-medium text-slate-500 mb-1">
-                                     Focus Time Spent
-                                 </h3>
-                                 <p className="text-xl font-bold text-slate-900">
-                                     {formatFullTime(focusTimeSpent)}
-                                 </p>
-                             </motion.div>
-                         </div>
-
-                         <motion.div
-                             key={motivationalPhrase}
-                             initial={{ opacity: 0, y: 10 }}
-                             animate={{ opacity: 1, y: 0 }}
-                             exit={{ opacity: 0, y: -10 }}
-                             transition={{ duration: 0.3 }}
-                             className="bg-white border border-slate-200 text-slate-800  w-full py-2 px-3 rounded-md inline-block text-sm font-medium"
-                         >
-                             {isLoading ? (
-                                 <Loader className="animate-spin" />
-                             ) : (
-                                 `${motivationalPhrase}`
-                             )}
-                         </motion.div> */}
                     </motion.div>
                     
                 )}
                 </AnimatePresence>
             </div>
         </div>
+        
         // <motion.div
         //     initial={{ x: 20, opacity: 0 }}
         //     animate={{ x: 0, opacity: 1 }}
@@ -589,35 +586,7 @@ export default function PomodoroTimer({
         //                     </Button>
         //                 </motion.div>
 
-        //                 <div className="flex flex-row justify-between gap-4 items-center mb-4">
-        //                     <motion.div
-        //                         initial={{ opacity: 0, y: 20 }}
-        //                         animate={{ opacity: 1, y: 0 }}
-        //                         transition={{ delay: 0.3, duration: 0.5 }}
-        //                         className="bg-slate-100 rounded-lg p-3 w-1/2"
-        //                     >
-        //                         <h3 className="text-xs font-medium text-slate-500 mb-1">
-        //                             Completed
-        //                         </h3>
-        //                         <p className="text-xl font-bold text-slate-900">
-        //                             {completedPomodoros}
-        //                         </p>
-        //                     </motion.div>
-
-        //                     <motion.div
-        //                         initial={{ opacity: 0, y: 20 }}
-        //                         animate={{ opacity: 1, y: 0 }}
-        //                         transition={{ delay: 0.4, duration: 0.5 }}
-        //                         className="bg-slate-100 rounded-lg p-3 w-1/2"
-        //                     >
-        //                         <h3 className="text-xs font-medium text-slate-500 mb-1">
-        //                             Focus Time Spent
-        //                         </h3>
-        //                         <p className="text-xl font-bold text-slate-900">
-        //                             {formatFullTime(focusTimeSpent)}
-        //                         </p>
-        //                     </motion.div>
-        //                 </div>
+       
 
         //                 <motion.div
         //                     key={motivationalPhrase}

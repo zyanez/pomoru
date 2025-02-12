@@ -47,7 +47,7 @@ export function TasksTable(){
             <>
                 
                 {taskList.length > 0 ? (
-                    taskList.map((task) => (
+                    taskList.map((task, i) => (
                         <TaskDetails key={task.id || i} task={task} />
                     ))
                 ) : (

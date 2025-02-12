@@ -32,26 +32,22 @@ export function ProjectDetails({
 
     return (
         <>
-            <div className="flex items-center justify-between">
-                <div className="">
-                    <h2 className="text-2xl font-bold tracking-tight">
-                        {selectedProject.name}
-                    </h2>
-                    <p>{selectedProject.description}</p>
-                </div>
-                <div className="flex gap-x-4">
-                    
-                    <Button size="icon" variant="ghost">
-                        <EllipsisVertical />
-                    </Button>
-                </div>
-            </div>
             <div className="grid gap-4">
                 <div className="rounded-lg border bg-card text-card-foreground">
                     <div className="p-6">
-                        <h3 className="font-semibold text-lg mb-2">
-                            Tasks Overview
-                        </h3>
+                        <div className="flex flex-row justify-between mb-3">
+                            <div className="flex flex-col">
+                                <h2 className="text-lg font-semibold tracking-tight">
+                                    {selectedProject.name}
+                                </h2>
+                                <p className="text-sm">{selectedProject.description}</p>
+                            </div>
+                            <div className="flex gap-x-4">
+                                <Button size="icon" variant="ghost">
+                                    <EllipsisVertical />
+                                </Button>
+                            </div>
+                        </div>
                         <div className="mb-2 flex flex-row text-xs space-x-4 text-muted-foreground">
                             <div className="flex flex-row items-center space-x-2">
                                 <TypeIcon type={selectedProject.type} />
