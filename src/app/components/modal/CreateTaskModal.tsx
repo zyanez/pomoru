@@ -8,11 +8,9 @@ import { useTaskList } from "@/app/providers/taskList/use";
 import LoadingModal from "./LoadingModal";
 import { ApiCall } from "@/app/calls/ApiCall";
 import { useProjectList } from "@/app/providers/projectList/use";
-import { useCacheTaskList } from "@/app/providers/cacheTaskList/use";
 
 export function CreateTaskModal(){
-    const {state: {taskList}, actions : {addTask}} = useTaskList()
-    const {actions: {cacheTasks, retrieveFromCache}} = useCacheTaskList()
+    const { actions : {addTask}} = useTaskList()
     const {state : {selectedProject}} = useProjectList()
     const [title, setTitle] = useState("");
     const [important, setImportant] = useState(0);
@@ -42,7 +40,6 @@ export function CreateTaskModal(){
             // do api call, add to tasklist then update cache
             const newTask = await ApiCall.createTask({title, important, projectId: selectedProject.id});
             addTask(newTask);
-            cacheTasks({projectId: selectedProject.id, tasks: taskList});
 
             return true;
         } catch (error) {
