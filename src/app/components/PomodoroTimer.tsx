@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Play, Pause, RefreshCcw, Settings, Loader, Clock } from "lucide-react";
+import { Play, Pause, RefreshCcw, Settings, Loader, Clock, Square } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProjectList } from "../providers/projectList/use";
+import { Project } from "../types/utils";
 
 type Phase = "FOCUS" | "SHORT_BREAK" | "LONG_BREAK";
 
@@ -49,6 +50,7 @@ export default function PomodoroTimer({
 }: PomodoroTimerProps) {
 
     const {state : {selectedProject}} = useProjectList()
+    const [lockedInProject, setLockedInProject] = useState<Project | null>(null);
     // pomodoroTypes[0] (light) | pomodoroTypes[1] (standard) | pomodoroTypes[3] (intensive)
     const [pomodoroType, setPomodoroType] = useState(pomodoroTypes[1]);
     const [pomodorosBeforeLongBreak] = useState(4);
@@ -148,7 +150,14 @@ export default function PomodoroTimer({
 
     // Toggle for Timer
     const toggleTimer = () => {
-        setIsActive((prev) => !prev);
+        if (selectedProject == null){
+            alert("No project selected")
+        } else {
+            setIsActive((prev) => !prev);
+            if (lockedInProject == null){
+                setLockedInProject(selectedProject)
+            }
+        }
     };
 
     // Reset Timer Function
@@ -156,6 +165,7 @@ export default function PomodoroTimer({
         setIsActive(false);
         setTimeLeft(pomodoroType.focusTime);
         setMotivationalPhrase(selectMotivationalPhrase());
+        setLockedInProject(null)
     };
 
     // Change Timer Type
@@ -165,9 +175,9 @@ export default function PomodoroTimer({
     };
 
     // Select new project -> Reset timer
-    useEffect(() => {
-        resetTimer();
-    }, [selectedProject]); // Added resetTimer to dependencies
+    //useEffect(() => {
+    //    resetTimer();
+    //}, [selectedProject]); // Added resetTimer to dependencies
 
     useEffect(() => {
         onTimeUpdate(focusTimeSpent);
@@ -373,13 +383,25 @@ export default function PomodoroTimer({
                                 )}
                             </Button>
                             <Button variant="outline" onClick={resetTimer}>
-                                <RefreshCcw className="h-4 w-4" />
+                                <Square className="h-4 w-4" />
                             </Button>
                             <Button variant="outline" onClick={toggleTimerType}>
                                 <Settings className="h-4 w-4" />
                             </Button>
                         </motion.div>
-
+                        <motion.div
+                            className="flex justify-center gap-4 mb-2 text-black"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                        >
+                            {lockedInProject != null 
+                                ? lockedInProject.name 
+                                : selectedProject != null 
+                                    ? selectedProject.name 
+                                    : "Select a project to start Pomoru!!!"
+                            }
+                        </motion.div>
                         <div className="flex flex-row justify-between gap-4 items-center mb-4">
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
