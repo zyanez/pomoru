@@ -5,7 +5,8 @@ import GoogleLogin from "./GoogleLogin";
 import { APP_VERSION } from "@/app/config/version";
 import Image from "next/image";
 import { Logo } from "./Logo";
-
+import Link from "next/link";
+import { ModeToggle } from "@/components/toggleTheme";
 
 export default function Header() {
     const { data: session } = useSession();
@@ -15,51 +16,42 @@ export default function Header() {
         str.length > max ? str.slice(0, max) + "..." : str;
 
     function handleLogout() {
-        signOut({ callbackUrl: '/' });
+        signOut({ callbackUrl: "/" });
     }
 
     return (
-        <header className="bg-white border-b border-slate-200 block sm:hidden">
-            <div className="mx-auto">
-                <div className="flex justify-between items-center py-4">
-                    <div className="px-7 flex flex-row gap-2 text-slate-800 items-center">
-                        <Logo/>
-                        <div className="flex flex-row items-center">
-                            <h1 className="font-bold text-lg">Pomoru</h1>
-                            <span className="ml-2 px-2 py-0.5 text-xs text-slate-500 bg-slate-200 rounded-full">v{APP_VERSION}</span>
-                        </div>
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container flex h-14 items-center">
+                <div className="flex items-center space-x-2">
+                    <Logo />
+                    <div className="flex flex-row gap-x-1 items-center">
+                        <span className="font-bold inline-block">Pomoru</span>
+                        <span className="text-xs text-muted-foreground">v{APP_VERSION}</span>
                     </div>
-                    <div className="flex items-center space-x-4">
-                        {session ? (
-                            <motion.button
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.5 }}
-                                onClick={() => setModalOpen(true)}
-                                className="flex items-center cursor-pointer hover:bg-slate-100 px-3 py-2 rounded-md"
-                            >
+                </div>
+                <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+                    <div className="w-full flex-1 md:w-auto md:flex-none"></div>
+                    <nav className="flex items-center space-x-4">
+                        <ModeToggle/>
+                        <button
+                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground px-4 py-2 relative h-8 w-8 rounded-full"
+                        >
+                            <span className="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8">
                                 <Image
                                     src={
-                                        session.user?.image ||
+                                        session?.user?.image ||
                                         "/default-avatar.png"
                                     }
                                     alt="User avatar"
                                     width={720}
                                     height={720}
-                                    className="h-8 w-8 rounded-full mr-2 "
+                                    className="h-8 w-8 rounded-full"
                                 />
-                                <span className="text-sm text-slate-800 font-medium block xs:hidden">
-                                    {truncate(session.user?.name || "User", 10)}
-                                </span>
-                            </motion.button>
-                        ) : (
-                            <GoogleLogin />
-                        )}
-                        
-                    </div>
+                            </span>
+                        </button>
+                    </nav>
                 </div>
             </div>
-
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

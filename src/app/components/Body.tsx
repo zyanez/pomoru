@@ -8,12 +8,12 @@ export function Body() {
     const {state : {selectedProject}} = useProjectList();
     
     return (
-        <div className="flex-1 p-16 overflow-auto">
+        <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
             {selectedProject ? (
                 <>
-                    <ProjectDetails selectedProject={selectedProject} />
+                    
                     <TaskListProvider>
-                        <TasksTable />
+                        <ProjectDetails selectedProject={selectedProject} />
                     </TaskListProvider>
                 </>
             ) : (

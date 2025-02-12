@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { ClipboardList, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TaskDetails } from "./TaskDetails";
 import { useTaskList } from "@/app/providers/taskList/use";
@@ -30,21 +30,28 @@ export function TasksTable(){
 
     return <>
         {loading ? (
-            <div className="flex items-center justify-center h-16">
-                <Loader2 className="animate-spin h-5 w-5 text-slate-500" />
-                <span className="ml-2 text-sm text-gray-500">
+            <div className="flex items-center justify-center h-16 text-muted-foreground">
+                <Loader2 className="animate-spin h-5 w-5" />
+                <span className="ml-2 text-sm">
                     Loading tasks...
                 </span>
             </div>
         ) : (
-            <div key="asjf">
-                <CreateTaskModal />
-                {
-                    taskList.length != 0 ? taskList.map((task, i) => (
-                        <TaskDetails task={task} />
-                    )) : <p className="text-black">no task</p>
-                }
-            </div>
+            <>
+                
+                {taskList.length > 0 ? (
+                    taskList.map((task) => (
+                        <TaskDetails key={task.id || i} task={task} />
+                    ))
+                ) : (
+                    <div className="flex flex-col items-center justify-center p-10 text-center text-muted-foreground">
+                        <ClipboardList className="h-10 w-10 mb-2" />
+                        <p className="text-sm font-medium">
+                            No tasks yet. Start by adding one!
+                        </p>
+                    </div>
+                )}
+            </>
         )}
         
     </>

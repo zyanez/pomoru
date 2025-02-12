@@ -4,13 +4,42 @@ import { Check, Clock, EllipsisVertical, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { UpdateTaskModal } from "../modal/UpdateTaskModal";
 import { DeleteTaskModal } from "../modal/DeleteTaskModal";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import React from "react";
+import { cn } from "@/lib/utils";
 
-export function TaskDetails({task} : {task:Task}){
-    const {actions: {updateTask}} = useTaskList()
-    // create/POST needs modal on taskTable 
+interface BadgeVariant {
+    label: string;
+    bg: string;
+    text: string;
+}
+const badgeVariants: Record<number, BadgeVariant> = {
+    0: {
+        label: "Low",
+        bg: "bg-green-100 dark:bg-green-800",
+        text: "text-green-500 dark:text-green-100",
+    },
+    1: {
+        label: "Medium",
+        bg: "bg-yellow-100 dark:bg-yellow-800",
+        text: "text-yellow-500 dark:text-yellow-100",
+    },
+    2: {
+        label: "High",
+        bg: "bg-rose-100 dark:bg-rose-800",
+        text: "text-rose-500 dark:text-rose-100",
+    },
+};
+
+export function TaskDetails({ task }: { task: Task }) {
+    const {
+        actions: { updateTask },
+    } = useTaskList();
+    // create/POST needs modal on taskTable
     // others RUD need special row component TaskDetails
 
-    const update = async (task:Task) => {
+    const update = async (task: Task) => {
         try {
             const response = await fetch("/api/tasks", {
                 method: "PUT",
@@ -19,73 +48,84 @@ export function TaskDetails({task} : {task:Task}){
                 },
                 body: JSON.stringify(task),
             });
-    
+
             if (!response.ok) {
                 throw new Error("Failed to update task");
             }
-    
+
             const newTask = await response.json();
-            updateTask(newTask[0])
+            updateTask(newTask[0]);
         } catch (error) {
             console.error("Error updating task:", error);
             alert("There was an error updating the task. Please try again.");
         }
-    }
+    };
 
     const changeToCompleted = () => {
-        const updatedTask : Task = {
+        const updatedTask: Task = {
             id: task.id,
             title: task.title,
             completed: true,
             important: task.important,
             createdAt: task.createdAt,
-            projectId: task.projectId
-        }
-        update(updatedTask)
-    }
-    console.log("on details " + JSON.stringify(task))
-    return <div className="flex flex-row items-center h-10 mb-2 bg-slate-200">
-        <Completed completed={task.completed} onClick={changeToCompleted}/>
-        <Title title={task.title}/>
-        <Importance type={task.important}/>
-        <UpdateTaskModal task={task}/>
-        <DeleteTaskModal task={task}/>
-    </div>
-}
-function Title({title}:{title:string}){
-    return <span className={"mx-2 text-black text-bold"}>{title}</span>
-}
-function Completed({completed, onClick}:{completed:boolean, onClick : ()=>void}) {
-    const className = "bg-slate-500 p-[0.05rem] h-8 w-8";
+            projectId: task.projectId,
+        };
+        update(updatedTask);
+    };
+    console.log("on details " + JSON.stringify(task));
     return (
-        <button onClick={onClick} disabled={completed}>
-            {
-                completed 
-                ? <Check className={className + " text-green-300"} />
-                : <X className={className +  " text-red-300 hover:bg-slate-900"} />
-            }
-        </button>
-    )
+        <div className={` flex items-center justify-between mt-4 p-2 rounded ${ task.completed ? "bg-muted" : "bg-transparent"}`}>
+            <div className="flex items-center gap-x-2">
+                <Completed
+                    completed={task.completed}
+                    onClick={changeToCompleted}
+                />
+                <Title title={task.title} />
+                <Importance type={task.important} />
+            </div>
+            <div className="flex items-center gap-x-2">
+                
+                {/* <UpdateTaskModal task={task} />
+                <DeleteTaskModal task={task} /> */}
+            </div>
+        </div>
+    );
 }
-function Importance({type}:{type:number}){
-    switch (type) {
-        case 0:
-            return (<span className={"mx-2 text-green-500"}>
-                Low
-            </span>)
-        case 1:
-            return (<span className={"mx-2 text-blue-500"}>
-                Medium
-            </span>)
-        case 2:
-            return (<span className={"mx-2 text-red-500"}>
-                High
-            </span>)
-        default:
-            return (<span className={"mx-2 text-red-500"}>
-                High
-            </span>)
-    }
+function Title({ title }: { title: string }) {
+    return <span className={"mx-2 text-sm"}>{title}</span>;
+}
+function Completed({
+    completed,
+    onClick,
+}: {
+    completed: boolean;
+    onClick: () => void;
+}) {
+    return (
+        <Button
+            variant="outline"
+            size="icon"
+            onClick={onClick}
+            
+            className={`h-5 w-5 rounded ${completed ? 'bg-foreground hover:bg-accent-foreground' : ''}`}
+        >
+            {completed ? <Check className={"text-background"} /> : ""}
+        </Button>
+    );
+}
+function Importance({ type }: { type: number }) {
+    const variant = badgeVariants[type] || badgeVariants[2];
+    return (
+        <div
+            className={cn(
+                "text-xs px-3 py-1 rounded font-medium select-none",
+                variant.bg,
+                variant.text
+            )}
+        >
+            {variant.label}
+        </div>
+    );
 }
 /*
 function Options({function}:{function : (task:Task)=>Promise<void>) | undefined}){
