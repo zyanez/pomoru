@@ -13,9 +13,11 @@ export function Body() {
             {selectedProject ? (
                 <>
                     <ProjectDetails selectedProject={selectedProject} />
-                    <TaskListProvider>
-                        <TasksTable />
-                    </TaskListProvider>
+                    <CacheTaskListProvider>
+                        <TaskListProvider>
+                            <TasksTable />
+                        </TaskListProvider>
+                    </CacheTaskListProvider>
                 </>
             ) : (
                 <div className="h-full flex items-center justify-center">
