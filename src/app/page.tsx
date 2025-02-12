@@ -7,7 +7,6 @@ import Header from "./components/Header";
 import PomodoroTimer from "./components/PomodoroTimer";
 import { useSession } from "next-auth/react";
 import { Body } from "./components/Body";
-import { SelectedProjectProvider } from "./providers/selectedProject/provider";
 import Modal from "./components/modal/BaseModal";
 import { TestTube, X } from "lucide-react";
 import BaseModal from "./components/modal/BaseModal";

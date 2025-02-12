@@ -7,7 +7,7 @@ import { ApiCall } from "@/app/calls/ApiCall";
 import { useProjectList } from "@/app/providers/projectList/use";
 
 export function TasksTable(){
-    const {state : {taskList}, actions: {load}} = useTaskList()
+    const {state : {taskList}, actions: {setTasks, cacheTasks, retrieveFromCache}} = useTaskList()
     const {state : {selectedProject}} = useProjectList();
     const [loading, setLoading] = useState(true)
 
@@ -15,9 +15,16 @@ export function TasksTable(){
         const fetchTasks = async () => {
             try {
                 setLoading(true)
-                if (selectedProject == null) throw new Error("Failed to create task. No project id.");
-                const tasks = await ApiCall.getTasksByProjectId(selectedProject?.id)
-                load(tasks);
+                if (selectedProject == null) throw new Error("No project id.");
+                
+                // look in cache first, if nothing is found then do call
+                let tasks = retrieveFromCache(selectedProject.id);
+                if (tasks == undefined) {
+                    tasks = await ApiCall.getTasksByProjectId(selectedProject?.id)
+                    cacheTasks({projectId: selectedProject.id, tasks});
+                }
+                setTasks(tasks);
+                
             } catch (error) {
                 console.error("Error fetching tasks: ", error);
             } finally {

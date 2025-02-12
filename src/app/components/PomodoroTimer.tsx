@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { Play, Pause, RefreshCcw, Settings, Loader, Clock, Square } from "lucide-react";
 import { Play, Pause, RefreshCcw, Settings, Loader, Clock, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProjectList } from "../providers/projectList/use";
+import { Project } from "../types/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -48,6 +50,9 @@ export default function PomodoroTimer({
     onTimeUpdate,
     onPomodoroUpdate,
 }: PomodoroTimerProps) {
+
+    const {state : {selectedProject}} = useProjectList()
+    const [lockedInProject, setLockedInProject] = useState<Project | null>(null);
     const {
         state: { selectedProject },
     } = useProjectList();
@@ -150,7 +155,14 @@ export default function PomodoroTimer({
 
     // Toggle for Timer
     const toggleTimer = () => {
-        setIsActive((prev) => !prev);
+        if (selectedProject == null){
+            alert("No project selected")
+        } else {
+            setIsActive((prev) => !prev);
+            if (lockedInProject == null){
+                setLockedInProject(selectedProject)
+            }
+        }
     };
 
     // Reset Timer Function
@@ -158,6 +170,7 @@ export default function PomodoroTimer({
         setIsActive(false);
         setTimeLeft(pomodoroType.focusTime);
         setMotivationalPhrase(selectMotivationalPhrase());
+        setLockedInProject(null)
     };
 
     // Change Timer Type
@@ -167,9 +180,9 @@ export default function PomodoroTimer({
     };
 
     // Select new project -> Reset timer
-    useEffect(() => {
-        resetTimer();
-    }, [selectedProject]); // Added resetTimer to dependencies
+    //useEffect(() => {
+    //    resetTimer();
+    //}, [selectedProject]); // Added resetTimer to dependencies
 
     useEffect(() => {
         onTimeUpdate(focusTimeSpent);

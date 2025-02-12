@@ -3,6 +3,7 @@ import { ProjectDetails } from "./ProjectDetails";
 import { TasksTable } from "./tasks/TasksTable";
 import { TaskListProvider } from "../providers/taskList/provider";
 import { useProjectList } from "../providers/projectList/use";
+import { CacheTaskListProvider } from "../providers/cacheTaskList/provider";
 
 export function Body() {
     const {state : {selectedProject}} = useProjectList();
@@ -11,10 +12,11 @@ export function Body() {
         <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
             {selectedProject ? (
                 <>
-                    
-                    <TaskListProvider>
-                        <ProjectDetails selectedProject={selectedProject} />
-                    </TaskListProvider>
+                    <CacheTaskListProvider>
+                        <TaskListProvider>
+                            <ProjectDetails selectedProject={selectedProject} />
+                        </TaskListProvider>
+                    </CacheTaskListProvider>
                 </>
             ) : (
                 <div className="h-full flex items-center justify-center">

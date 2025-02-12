@@ -1,13 +1,14 @@
 import { useTaskList } from "@/app/providers/taskList/use";
 import { Task } from "@/app/types/utils";
-import { Check, Clock, EllipsisVertical, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Check, X } from "lucide-react";
 import { UpdateTaskModal } from "../modal/UpdateTaskModal";
 import { DeleteTaskModal } from "../modal/DeleteTaskModal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import React from "react";
 import { cn } from "@/lib/utils";
+import { ApiCall } from "@/app/calls/ApiCall";
+import { useCallback } from "react";
 
 interface BadgeVariant {
     label: string;
@@ -32,47 +33,20 @@ const badgeVariants: Record<number, BadgeVariant> = {
     },
 };
 
-export function TaskDetails({ task }: { task: Task }) {
-    const {
-        actions: { updateTask },
-    } = useTaskList();
-    // create/POST needs modal on taskTable
-    // others RUD need special row component TaskDetails
+export function TaskDetails({task} : {task:Task}){
+    const {state: {taskList}, actions: {updateTask}} = useTaskList()
 
-    const update = async (task: Task) => {
+    const changeToCompleted = useCallback(async () => {
         try {
-            const response = await fetch("/api/tasks", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(task),
-            });
+            const updatedTask = await ApiCall.completeTask(task.id)
+            updateTask(updatedTask)
 
-            if (!response.ok) {
-                throw new Error("Failed to update task");
-            }
-
-            const newTask = await response.json();
-            updateTask(newTask[0]);
         } catch (error) {
             console.error("Error updating task:", error);
             alert("There was an error updating the task. Please try again.");
         }
-    };
-
-    const changeToCompleted = () => {
-        const updatedTask: Task = {
-            id: task.id,
-            title: task.title,
-            completed: true,
-            important: task.important,
-            createdAt: task.createdAt,
-            projectId: task.projectId,
-        };
-        update(updatedTask);
-    };
-    console.log("on details " + JSON.stringify(task));
+    }, [task])
+    
     return (
         <div className={` flex items-center justify-between mt-4 p-2 rounded ${ task.completed ? "bg-muted" : "bg-transparent"}`}>
             <div className="flex items-center gap-x-2">

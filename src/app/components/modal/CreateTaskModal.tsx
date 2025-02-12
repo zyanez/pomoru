@@ -2,16 +2,15 @@
 // task is not null -> update/delete
 
 import { useState } from "react";
-import { AlertTriangle, Circle, CircleAlert, User, Plus  } from "lucide-react";
+import { AlertTriangle, Circle, CircleAlert  } from "lucide-react";
 
 import { useTaskList } from "@/app/providers/taskList/use";
 import LoadingModal from "./LoadingModal";
 import { ApiCall } from "@/app/calls/ApiCall";
 import { useProjectList } from "@/app/providers/projectList/use";
-import BaseModal from "./BaseModal";
 
 export function CreateTaskModal(){
-    const {actions : {addTask}} = useTaskList()
+    const { actions : {addTask}} = useTaskList()
     const {state : {selectedProject}} = useProjectList()
     const [title, setTitle] = useState("");
     const [important, setImportant] = useState(0);
@@ -38,6 +37,7 @@ export function CreateTaskModal(){
                 return false
             }
 
+            // do api call, add to tasklist then update cache
             const newTask = await ApiCall.createTask({title, important, projectId: selectedProject.id});
             addTask(newTask);
 
