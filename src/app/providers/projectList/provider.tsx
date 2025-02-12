@@ -14,7 +14,7 @@ export function ProjectListProvider({ children } : {children : ReactNode}) {
     // Inserting a task
     const addProject = useCallback((newProject: Project) => {
         setProjectList((oldProjects) => [...oldProjects, newProject]);
-//        setSelectedProject(newProject)
+        setSelectedProject(newProject)                                      // to avoid BUG
     }, []);
 
     // Updating a task
