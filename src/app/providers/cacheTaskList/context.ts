@@ -11,8 +11,7 @@ interface ICacheTaskListContext {
         cachedTasks: CacheTaskList[] | [];
     }
     actions: {
-        addToCache: (tasks: CacheTaskList) => void;
-        updateCache: (tasks: CacheTaskList) => void;
+        cacheTasks: (tasks: CacheTaskList) => void;
         deleteFromCache: (projectId: number) => void
         retrieveFromCache: (projectId: number) => Task[] | undefined
     };
@@ -25,8 +24,7 @@ export const CacheTaskListContext = createContext<ICacheTaskListContext>(
             cachedTasks: [], 
         },
         actions: { 
-            addToCache: ()=>alert("Provider not found"),
-            updateCache: ()=>alert("Provider not found"),
+            cacheTasks: ()=>alert("Provider not found"),
             deleteFromCache: ()=>alert("Provider not found"),
             retrieveFromCache: ()=>{alert("Provider not found"); return[];},
         },

@@ -5,18 +5,15 @@ import {CacheTaskList, CacheTaskListContext} from "./context";
 export function CacheTaskListProvider({ children } : {children : ReactNode}) {
     const [cachedTasks, setCachedTaskList] = useState<CacheTaskList[]>([]);
 
-    // Inserting a list of tasks
-    const addToCache = useCallback(async (forCache: CacheTaskList) => {
-        setCachedTaskList((cache: CacheTaskList[]) => [...cache, forCache]);
-    }, []);
-
     // Updating a task
-    const updateCache = useCallback(async (newCache: CacheTaskList) => {
+    const cacheTasks = useCallback(async (newCache: CacheTaskList) => {
         setCachedTaskList(
             (cache : CacheTaskList[]) => {
                 const i = cache.findIndex((oldCache) => oldCache.projectId == newCache.projectId)
-                if (i == -1) throw Error("Task not found.")
-                return cache.with(i, newCache)
+                if (i == -1) {                  // Project id not found, 
+                    return [...cache, newCache] // append to cache
+                }
+                return cache.with(i, newCache)  // else, update existing cache
             });
     }, []);
 
@@ -42,7 +39,7 @@ export function CacheTaskListProvider({ children } : {children : ReactNode}) {
 
   const value = {
     state: { cachedTasks },
-    actions: { addToCache, updateCache, deleteFromCache, retrieveFromCache },
+    actions: { cacheTasks, deleteFromCache, retrieveFromCache },
   };
 
   return (
