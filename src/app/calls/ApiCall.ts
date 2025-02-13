@@ -29,7 +29,7 @@ export const ApiCall = {
             if (!response.ok) {
                 throw new Error(`Error: ${response.statusText} - ${body.message}`);
             }
-            return body[0];
+            return body;
         },
     deleteTask: 
         async (taskId: number) : Promise<{id:number}>  => {
