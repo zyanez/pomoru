@@ -1,19 +1,16 @@
 "use client";
 
-import { Folder, FolderOpen, Loader2 } from "lucide-react";
+import { Folder, FolderOpen, Loader2, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Project } from "../types/utils";
-import { motion } from "framer-motion";
 import { useProjectList } from "../providers/projectList/use";
-import { Logo } from "./Logo";
-import { APP_VERSION } from "../config/version";
 import { ApiCall } from "../calls/ApiCall";
 import { useSession } from "next-auth/react";
-import { CreateProjectModal } from "./modal/CreateProjectModal";
 import { Button } from "@/components/ui/button";
-
 import * as React from "react";
 import type { SVGProps } from "react";
+import CreateProjectModal from "./newmodal/CreateProjectModal";
+
 const Github = (props: SVGProps<SVGSVGElement>) => (
     <svg
         viewBox="0 0 256 250"
@@ -29,12 +26,10 @@ const Github = (props: SVGProps<SVGSVGElement>) => (
 );
 
 export function Sidebar() {
-    const {
-        state: { projectList, selectedProject },
-        actions: { load, selectProject },
-    } = useProjectList();
+    const {state: {projectList, selectedProject}, actions: {load, selectProject}} = useProjectList();
     const { data: session } = useSession();
     const [loading, setLoading] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -43,9 +38,7 @@ export function Sidebar() {
                 return;
             }
             try {
-                const projects = await ApiCall.getProjectsByUserId(
-                    session?.user?.id
-                );
+                const projects = await ApiCall.getProjectsByUserId(session?.user?.id);
                 load(projects);
             } catch (error) {
                 console.error("Error fetching projects:", error);
@@ -65,7 +58,14 @@ export function Sidebar() {
                         <h2 className="px-4 text-base font-semibold tracking-tight">
                             Projects
                         </h2>
-                        <CreateProjectModal />
+                        
+                        
+                        <button className="hover:bg-green-500" onClick={()=>setIsOpen(!isOpen)}>
+                            <Plus className="w-6 h-6"/>
+                            </button>
+                        <CreateProjectModal isOpen={isOpen} onOpenChange={setIsOpen} />
+
+
                     </div>
                     {loading ? (
                         <div className="flex items-center justify-center h-16 text-muted-foreground">
