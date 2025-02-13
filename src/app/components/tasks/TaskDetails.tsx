@@ -1,11 +1,9 @@
 import { useTaskList } from "@/app/providers/taskList/use";
 import { Task } from "@/app/types/utils";
-import { Check, X } from "lucide-react";
-import { UpdateTaskModal } from "../modal/UpdateTaskModal";
-import { DeleteTaskModal } from "../modal/DeleteTaskModal";
+import { Check, EllipsisVertical, X } from "lucide-react";
+import { UpdateTaskModal } from "../newmodal/UpdateTaskModal";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import React from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ApiCall } from "@/app/calls/ApiCall";
 import { useCallback } from "react";
@@ -35,6 +33,7 @@ const badgeVariants: Record<number, BadgeVariant> = {
 
 export function TaskDetails({task} : {task:Task}){
     const {state: {taskList}, actions: {updateTask}} = useTaskList()
+    const [isOpen, setIsOpen] = useState(false)
 
     const changeToCompleted = useCallback(async () => {
         try {
@@ -59,8 +58,12 @@ export function TaskDetails({task} : {task:Task}){
             </div>
             <div className="flex items-center gap-x-2">
                 
-                {/* <UpdateTaskModal task={task} />
-                <DeleteTaskModal task={task} /> */}
+            <div className="flex gap-x-4">
+                    <Button onClick={()=>setIsOpen(!isOpen)} size="icon" variant="ghost">
+                        <EllipsisVertical />
+                    </Button>
+                </div>
+                <UpdateTaskModal isOpen={isOpen} onOpenChange={setIsOpen} task={task}  />
             </div>
         </div>
     );
