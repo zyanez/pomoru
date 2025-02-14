@@ -13,7 +13,7 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
 
     // Inserting a task
     const addTask = useCallback((task: Task) => {
-        const projectId = taskList[0].projectId;
+        const projectId = task.projectId;
         const newTaskList = [...taskList, task];
 
         setTaskList(newTaskList);

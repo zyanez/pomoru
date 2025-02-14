@@ -10,6 +10,12 @@ export function TasksTable(){
     const {state : {taskList}, actions: {setTasks, cacheTasks, retrieveFromCache}} = useTaskList()
     const {state : {selectedProject}} = useProjectList();
     const [loading, setLoading] = useState(true)
+    const [isMounted,setIsMounted ] = useState(false)
+
+    useEffect(()=>{
+        setIsMounted(true)
+        console.log("mounted")
+    }, [])
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -24,7 +30,6 @@ export function TasksTable(){
                     cacheTasks({projectId: selectedProject.id, tasks});
                 }
                 setTasks(tasks);
-                
             } catch (error) {
                 console.error("Error fetching tasks: ", error);
             } finally {
