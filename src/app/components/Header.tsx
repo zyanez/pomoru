@@ -33,22 +33,32 @@ export default function Header() {
                     <div className="w-full flex-1 md:w-auto md:flex-none"></div>
                     <nav className="flex items-center space-x-4">
                         <ModeToggle/>
-                        <button
-                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground px-4 py-2 relative h-8 w-8 rounded-full"
-                        >
-                            <span className="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8">
-                                <Image
-                                    src={
-                                        session?.user?.image ||
-                                        "/default-avatar.png"
-                                    }
-                                    alt="User avatar"
-                                    width={720}
-                                    height={720}
-                                    className="h-8 w-8 rounded-full"
-                                />
-                            </span>
-                        </button>
+
+                        <>
+                            { session ? (
+                                <button
+                                    onClick={() => setModalOpen(true)}
+                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground px-4 py-2 relative h-8 w-8 rounded-full"
+                                >
+                                    <span className="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8">
+                                        <Image
+                                            src={
+                                                session?.user?.image ||
+                                                "/default-avatar.png"
+                                            }
+                                            alt="User avatar"
+                                            width={720}
+                                            height={720}
+                                            className="h-8 w-8 rounded-full"
+                                        />
+                                    </span>
+                                </button>
+                            ) : (
+
+                                <GoogleLogin/>
+                            )}
+                            
+                        </>
                     </nav>
                 </div>
             </div>

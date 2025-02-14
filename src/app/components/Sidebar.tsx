@@ -58,43 +58,59 @@ export function Sidebar() {
     }, [session]);
 
     return (
-        <div className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 overflow-y-auto border-r md:sticky md:block">
+        <div className="fixed justify-between top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 overflow-y-auto border-r md:sticky md:flex flex-col">
             <div className="space-y-4 py-4">
                 <div className="px-3 py-2">
                     <div className="flex items-center justify-between mb-2">
-                        <h2 className="px-4 text-base font-semibold tracking-tight">
-                            Projects
-                        </h2>
+                        <div className="flex flex-row items-center">
+                            <h2 className="px-4 text-base font-semibold tracking-tight">
+                                Projects
+                            </h2>
+                            <div className="-ml-2 text-[.685rem] text-muted-foreground font-medium">
+                                ({`${String(projectList.length).padStart(2, '0')}`} / 30)
+                            </div>
+                        </div>
                         <CreateProjectModal />
                     </div>
-                    {loading ? (
-                        <div className="flex items-center justify-center h-16 text-muted-foreground">
-                            <Loader2 className="animate-spin h-5 w-5 " />
-                            <span className="ml-2 text-sm ">
-                                Loading projects...
-                            </span>
-                        </div>
-                    ) : (
-                        <div className="space-y-1">
-                            {projectList.map((project) => (
-                                <ProjectButton
-                                    key={project.id}
-                                    project={project}
-                                    active={
-                                        selectedProject?.id === project.id
-                                    }
-                                    onClick={() => selectProject(project)}
-                                />
-                            ))}
-                            {projectList.length === 0 && (
-                                <p className="px-4 text-sm text-gray-500">
-                                    No projects available.
-                                </p>
+                    <>
+                        { session ? (
+                            <>
+                            {loading ? (
+                                <div className="flex items-center justify-center h-16 text-muted-foreground">
+                                    <Loader2 className="animate-spin h-5 w-5 " />
+                                    <span className="ml-2 text-sm ">
+                                        Loading projects...
+                                    </span>
+                                </div>
+                            ) : (
+                                <div className="space-y-1">
+                                    {projectList.map((project) => (
+                                        <ProjectButton
+                                            key={project.id}
+                                            project={project}
+                                            active={
+                                                selectedProject?.id === project.id
+                                            }
+                                            onClick={() => selectProject(project)}
+                                        />
+                                    ))}
+                                    {projectList.length === 0 && (
+                                        <p className="px-4 text-sm text-muted-foreground">
+                                            No projects available.
+                                        </p>
+                                    )}
+                                </div>
                             )}
-                        </div>
-                    )}
+                            </>
+                        ) : (
+                            <p className="px-4 text-sm text-muted-foreground">
+                                Create your first project!
+                            </p>
+                        )}
+                    </> 
                 </div>
             </div>
+
             <div className="mt-auto p-4">
                 <a
                     href="https://github.com/zyanez/pomoru"
@@ -102,11 +118,14 @@ export function Sidebar() {
                     rel="noopener noreferrer"
                     className="w-full"
                 >
-                    <Button variant="outline" className="w-full flex gap-2 h-10">
+                    <Button variant="default" className="w-full flex gap-2 h-10 mb-2">
                         <Github className="h-5 w-5"/>
                         <span>View on GitHub</span>
                     </Button>
                 </a>
+                <span className="text-xs text-muted-foreground">
+                    © {new Date().getFullYear()} Pomoru. All Rights Reserved.
+                </span>
             </div>
         </div>
     );

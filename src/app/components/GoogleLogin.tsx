@@ -4,6 +4,7 @@ import { signIn, useSession } from "next-auth/react";
 import * as React from "react";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -56,15 +57,12 @@ export default function GoogleLogin() {
     }
 
     return (
-        <motion.button
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+        <Button
+            variant="outline"
             onClick={handleSignIn}
-            className="flex flex-row justify-center text-sm items-center border border-slate-200 bg-white text-slate-800 font-medium px-4 py-2 rounded hover:bg-slate-100"
         >
             <GoogleIcon className="mr-3 h-5 w-5" />
             <span>Sign in with Google</span>
-        </motion.button>
+        </Button>
     );
 }
