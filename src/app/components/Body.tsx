@@ -10,11 +10,12 @@ export function Body() {
     return (
         <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
             {selectedProject ? (
-                <>
+                <div className="grid gap-4">
                     <TaskListProvider>
                         <ProjectDetails selectedProject={selectedProject} />
+                        <TasksTable/>
                     </TaskListProvider>
-                </>
+                </div>
             ) : (
                 <div className="h-full flex items-center justify-center">
                     <div className="text-center">

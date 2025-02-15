@@ -1,7 +1,7 @@
 import { useTaskList } from "@/app/providers/taskList/use";
 import { Task } from "@/app/types/utils";
 import { Check, EllipsisVertical, X } from "lucide-react";
-import { UpdateTaskModal } from "../newmodal/UpdateTaskModal";
+import { UpdateTaskModal2 } from "../nowaitmodal/UpdateTaskModal2";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -35,10 +35,11 @@ export function TaskDetails({task} : {task:Task}){
     const {state: {taskList}, actions: {updateTask}} = useTaskList()
     const [isOpen, setIsOpen] = useState(false)
 
-    const changeToCompleted = useCallback(async () => {
+    const changeToCompleted = useCallback(() => {
         try {
-            const updatedTask = await ApiCall.completeTask(task.id)
-            updateTask(updatedTask)
+            ApiCall.completeTask(task.id)
+            task.completed = true
+            updateTask(task)
 
         } catch (error) {
             console.error("Error updating task:", error);
@@ -63,7 +64,7 @@ export function TaskDetails({task} : {task:Task}){
                         <EllipsisVertical />
                     </Button>
                 </div>
-                <UpdateTaskModal isOpen={isOpen} onOpenChange={setIsOpen} task={task}  />
+                <UpdateTaskModal2 isOpen={isOpen} onOpenChange={setIsOpen} task={task}  />
             </div>
         </div>
     );
