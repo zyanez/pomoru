@@ -7,7 +7,7 @@ export function TaskListProvider({ children } : {children : ReactNode}) {
     const [cachedTasks, setCachedTaskList] = useState<CacheTaskList[]>([]);
 
     // Sets tasks for use,
-    const setTasks = useCallback(async (tasks: Task[]) => {
+    const setTasks = useCallback((tasks: Task[]) => {
         setTaskList(tasks);
     }, []);
 
