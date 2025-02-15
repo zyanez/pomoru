@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Play, Pause, RefreshCcw, Settings, Loader, Clock, Square } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProjectList } from "../providers/projectList/use";
 import { Project } from "../types/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ApiCall } from "../calls/ApiCall";
 
 type Phase = "FOCUS" | "SHORT_BREAK" | "LONG_BREAK";
 
@@ -50,7 +51,7 @@ export default function PomodoroTimer({
     onPomodoroUpdate,
 }: PomodoroTimerProps) {
 
-    const {state : {selectedProject}} = useProjectList()
+    const {state : {selectedProject}, actions: {updateProject}} = useProjectList()
     const [lockedInProject, setLockedInProject] = useState<Project | null>(null);
     // pomodoroTypes[0] (light) | pomodoroTypes[1] (standard) | pomodoroTypes[3] (intensive)
     const [pomodoroType, setPomodoroType] = useState(pomodoroTypes[1]);
@@ -75,6 +76,13 @@ export default function PomodoroTimer({
             new Notification(title, { body });
         }
     };
+
+    useEffect(() => {
+        if (lockedInProject != null)
+            setFocusTimeSpent(lockedInProject.workedTime)
+        else if (selectedProject != null)
+            setFocusTimeSpent(selectedProject.workedTime)
+    }, [selectedProject, lockedInProject])
 
     const selectMotivationalPhrase = useCallback(() => {
         setIsLoading(true);
@@ -133,6 +141,16 @@ export default function PomodoroTimer({
         return `${randomPhrase} ${randomEmoji}`;
     }, []);
 
+    const saveTimeSpent = useCallback(() => {
+        lockedInProject!.workedTime = focusTimeSpent;
+        updateProject(lockedInProject!)
+        ApiCall.updateProject(lockedInProject!.id, {workedTime: focusTimeSpent})
+    }, [lockedInProject, focusTimeSpent])
+
+    useMemo(()=>{
+        if (timeLeft % 20 == 1) saveTimeSpent()
+    },[lockedInProject, timeLeft])
+
     // Toggle for Timer
     const toggleTimer = () => {
         if (selectedProject == null){
@@ -142,11 +160,13 @@ export default function PomodoroTimer({
             if (lockedInProject == null){
                 setLockedInProject(selectedProject)
             }
+            saveTimeSpent();
         }
     };
 
     // Reset Timer Function
     const resetTimer = () => {
+        saveTimeSpent()
         setIsActive(false);
         setTimeLeft(pomodoroType.focusTime);
         setMotivationalPhrase(selectMotivationalPhrase());
@@ -218,6 +238,7 @@ export default function PomodoroTimer({
         pomodorosBeforeLongBreak,
         completedPomodoros,
         selectMotivationalPhrase,
+        saveTimeSpent,
     ]);
 
     const handleChangeType = (type: (typeof pomodoroTypes)[number]) => {
@@ -322,9 +343,9 @@ export default function PomodoroTimer({
                              <Button variant="outline" size="icon" onClick={resetTimer}>
                                  <RefreshCcw className="h-4 w-4" />
                              </Button>
-                             <Button variant="outline" size="icon" onClick={toggleTimerType}>
+                             {lockedInProject == null && <Button variant="outline" size="icon" onClick={toggleTimerType}>
                                  <Settings className="h-4 w-4" />
-                             </Button>
+                             </Button>}
                          </motion.div>
                          
                          <motion.div
