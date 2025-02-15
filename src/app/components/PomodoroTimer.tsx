@@ -70,22 +70,6 @@ export default function PomodoroTimer({
         }
     }, []);
 
-    const formatTimerTime = (seconds: number) => {
-        const m = Math.floor(seconds / 60);
-        const s = seconds % 60;
-        return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-    };
-
-    const formatFullTime = (seconds: number) => {
-        const h = Math.floor(seconds / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = seconds % 60;
-        return `${String(h).padStart(2, "0")}:${String(m).padStart(
-            2,
-            "0"
-        )}:${String(s).padStart(2, "0")}`;
-    };
-
     const sendNotification = (title: string, body: string) => {
         if ("Notification" in window && Notification.permission === "granted") {
             new Notification(title, { body });
@@ -252,7 +236,6 @@ export default function PomodoroTimer({
             ? pomodoroType.shortBreak
             : pomodoroType.longBreak;
 
-    const progressOffset = 283 - (283 * timeLeft) / currentPhaseTotalTime;
 
     // We need to improve this later!!
     const formatPhase = (str: string) => {
@@ -320,56 +303,9 @@ export default function PomodoroTimer({
                         <p className="text-center text-xs text-muted-foreground mt-1 mb-4">
                             {formatPhase(phase.toString())} Session
                         </p>
-                        <motion.div
-                            className="relative w-48 h-48 mx-auto mb-6"
-                            initial={{ scale: 0.9 }}
-                            animate={{ scale: 1 }}
-                            transition={{ duration: 0.5, ease: "easeOut" }}
-                        >
-                            <svg
-                                className="w-full h-full"
-                                viewBox="0 0 100 100"
-                            >
-                                <circle
-                                    className="text-muted"
-                                    cx="50"
-                                    cy="50"
-                                    r="45"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="10"
-                                />
-                                <motion.circle
-                                    className="text-accent-foreground"
-                                    cx="50"
-                                    cy="50"
-                                    r="45"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="10"
-                                    strokeDasharray="283"
-                                    initial={{ strokeDashoffset: 283 }}
-                                    animate={{
-                                        strokeDashoffset: progressOffset,
-                                    }}
-                                    transition={{
-                                        duration: 0.5,
-                                        ease: "easeInOut",
-                                    }}
-                                    transform="rotate(-90 50 50)"
-                                />
-                            </svg>
-                            <motion.div
-                                className="absolute inset-0 flex items-center justify-center"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.3, duration: 0.5 }}
-                            >
-                                <span className="text-4xl font-bold">
-                                    {formatTimerTime(timeLeft)}
-                                </span>
-                            </motion.div>
-                        </motion.div>
+
+                        <Timer timeLeft={timeLeft} totalTime={currentPhaseTotalTime} />
+                        
                         <motion.div
                              className="flex justify-center gap-4 mb-6"
                              initial={{ opacity: 0, y: 20 }}
@@ -405,37 +341,9 @@ export default function PomodoroTimer({
                             }
                         </motion.div>
 
-                         <div className="flex flex-row justify-between gap-4 items-center mb-4">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3, duration: 0.5 }}
-                                className="bg-slate-100 rounded-lg p-3 w-1/2"
-                            >
-                                <h3 className="text-xs font-medium text-slate-500 mb-1">
-                                    Completed
-                                </h3>
-                                <p className="text-xl font-bold text-slate-900">
-                                    {completedPomodoros}
-                                </p>
-                            </motion.div>
-
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4, duration: 0.5 }}
-                                className="bg-slate-100 rounded-lg p-3 w-1/2"
-                            >
-                                <h3 className="text-xs font-medium text-slate-500 mb-1">
-                                    Focus Time Spent
-                                </h3>
-                                <p className="text-xl font-bold text-slate-900">
-                                    {formatFullTime(focusTimeSpent)}
-                                </p>
-                            </motion.div>
-                        </div>
-                         <motion.div
+                        <TimeSpent completedPomodoros={completedPomodoros} focusTimeSpent={focusTimeSpent} />
+                         
+                        <motion.div
                             key={motivationalPhrase}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -456,5 +364,114 @@ export default function PomodoroTimer({
             </div>
         </div>
         
+    );
+}
+
+function TimeSpent({completedPomodoros, focusTimeSpent}: {completedPomodoros : number, focusTimeSpent : number}) {
+    const formatFullTime = (seconds: number) => {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return `${String(h).padStart(2, "0")}:${String(m).padStart(
+            2,
+            "0"
+        )}:${String(s).padStart(2, "0")}`;
+    };
+
+    return (
+        <div className="flex flex-row justify-between gap-4 items-center mb-4">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="bg-slate-100 rounded-lg p-3 w-1/2"
+            >
+                <h3 className="text-xs font-medium text-slate-500 mb-1">
+                    Completed
+                </h3>
+                <p className="text-xl font-bold text-slate-900">
+                    {completedPomodoros}
+                </p>
+            </motion.div>
+
+
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="bg-slate-100 rounded-lg p-3 w-1/2"
+            >
+                <h3 className="text-xs font-medium text-slate-500 mb-1">
+                    Focus Time Spent
+                </h3>
+                <p className="text-xl font-bold text-slate-900">
+                    {formatFullTime(focusTimeSpent)}
+                </p>
+            </motion.div>
+        </div>
+    );
+}
+
+function Timer({timeLeft, totalTime} : {timeLeft:number, totalTime:number}){
+    const formatTimerTime = (seconds: number) => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    };
+
+    
+    const progressOffset = 283 - (283 * timeLeft) / totalTime;
+
+    return (
+        <motion.div
+            className="relative w-48 h-48 mx-auto mb-6"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+            <svg
+                className="w-full h-full"
+                viewBox="0 0 100 100"
+            >
+                <circle
+                    className="text-muted"
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="10"
+                />
+                <motion.circle
+                    className="text-accent-foreground"
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="10"
+                    strokeDasharray="283"
+                    initial={{ strokeDashoffset: 283 }}
+                    animate={{
+                        strokeDashoffset: progressOffset,
+                    }}
+                    transition={{
+                        duration: 0.5,
+                        ease: "easeInOut",
+                    }}
+                    transform="rotate(-90 50 50)"
+                />
+            </svg>
+            <motion.div
+                className="absolute inset-0 flex items-center justify-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+            >
+                <span className="text-4xl font-bold">
+                    {formatTimerTime(timeLeft)}
+                </span>
+            </motion.div>
+        </motion.div>
     );
 }
