@@ -1,5 +1,3 @@
-// task is null -> insert
-// task is not null -> update/delete
 
 import { useState } from "react";
 import { AlertTriangle, Circle, CircleAlert  } from "lucide-react";

@@ -175,11 +175,6 @@ export default function PomodoroTimer({
         setShowTimer(false);
     };
 
-    // Select new project -> Reset timer
-    //useEffect(() => {
-    //    resetTimer();
-    //}, [selectedProject]); // Added resetTimer to dependencies
-
     useEffect(() => {
         onTimeUpdate(focusTimeSpent);
     }, [focusTimeSpent, onTimeUpdate]);
@@ -241,39 +236,6 @@ export default function PomodoroTimer({
         selectMotivationalPhrase,
     ]);
 
-    const ButtonPomodoro = ({
-        variant = "default",
-        children,
-        onClick,
-        disabled,
-    }: {
-        variant?: "default" | "outline";
-        size?: "sm" | "md" | "lg";
-        children: React.ReactNode;
-        onClick: () => void;
-        disabled?: boolean | null;
-    }) => {
-        const baseClasses =
-            "px-4 py-2 rounded text-sm font-semibold transition-colors inline-flex items-center gap-2 disabled:hover:bg-none";
-        const variantClasses =
-            variant === "default"
-                ? "bg-slate-800 text-white"
-                : "border border-slate-300 text-slate-900 enabled:hover:bg-slate-100";
-        const disabledClasses = disabled
-            ? "pointer-events-none opacity-70"
-            : "";
-
-        return (
-            <button
-                onClick={onClick}
-                className={`${baseClasses} ${variantClasses} ${disabledClasses}`}
-                disabled={!!disabled}
-            >
-                {children}
-            </button>
-        );
-    };
-
     const handleChangeType = (type: (typeof pomodoroTypes)[number]) => {
         setShowTimer(true);
         setPomodoroType(type);
@@ -282,8 +244,6 @@ export default function PomodoroTimer({
         setIsActive(false);
         setMotivationalPhrase(selectMotivationalPhrase());
     };
-
-    //const progressOffset = 283 - (283 * timeLeft) / pomodoroType.focusTime;
 
     const currentPhaseTotalTime =
         phase === "FOCUS"
@@ -496,168 +456,5 @@ export default function PomodoroTimer({
             </div>
         </div>
         
-        // <motion.div
-        //     initial={{ x: 20, opacity: 0 }}
-        //     animate={{ x: 0, opacity: 1 }}
-        //     exit={{ x: -20, opacity: 0 }}
-        //     transition={{ duration: 0.5, ease: "easeInOut" }}
-        //     className="w-full md:w-96 border-t sm:border-t-0 sm:border-l border-slate-200 bg-white p-8 overflow-auto"
-        // >
-        //     <AnimatePresence mode="wait">
-        //         {showTimer ? (
-        //             <motion.div
-        //                 key="timer"
-        //                 initial={{ opacity: 0, y: 20 }}
-        //                 animate={{ opacity: 1, y: 0 }}
-        //                 exit={{ opacity: 0, y: -20 }}
-        //                 transition={{ duration: 0.5, ease: "easeInOut" }}
-        //             >
-        //                 <h2 className="text-center text-2xl font-bold text-slate-800 mb-4">
-        //                     {formatPhase(phase.toString())}
-        //                 </h2>
-        //                 <motion.div
-        //                     className="relative w-48 h-48 mx-auto mb-6"
-        //                     initial={{ scale: 0.9 }}
-        //                     animate={{ scale: 1 }}
-        //                     transition={{ duration: 0.5, ease: "easeOut" }}
-        //                 >
-        //                     <svg
-        //                         className="w-full h-full"
-        //                         viewBox="0 0 100 100"
-        //                     >
-        //                         <circle
-        //                             className="text-slate-200"
-        //                             cx="50"
-        //                             cy="50"
-        //                             r="45"
-        //                             fill="none"
-        //                             stroke="currentColor"
-        //                             strokeWidth="10"
-        //                         />
-        //                         <motion.circle
-        //                             className="text-slate-800"
-        //                             cx="50"
-        //                             cy="50"
-        //                             r="45"
-        //                             fill="none"
-        //                             stroke="currentColor"
-        //                             strokeWidth="10"
-        //                             strokeDasharray="283"
-        //                             initial={{ strokeDashoffset: 283 }}
-        //                             animate={{
-        //                                 strokeDashoffset: progressOffset,
-        //                             }}
-        //                             transition={{
-        //                                 duration: 0.5,
-        //                                 ease: "easeInOut",
-        //                             }}
-        //                             transform="rotate(-90 50 50)"
-        //                         />
-        //                     </svg>
-        //                     <motion.div
-        //                         className="absolute inset-0 flex items-center justify-center"
-        //                         initial={{ opacity: 0 }}
-        //                         animate={{ opacity: 1 }}
-        //                         transition={{ delay: 0.3, duration: 0.5 }}
-        //                     >
-        //                         <span className="text-4xl font-bold text-slate-800">
-        //                             {formatTimerTime(timeLeft)}
-        //                         </span>
-        //                     </motion.div>
-        //                 </motion.div>
-        //                 <motion.div
-        //                     className="flex justify-center gap-4 mb-6"
-        //                     initial={{ opacity: 0, y: 20 }}
-        //                     animate={{ opacity: 1, y: 0 }}
-        //                     transition={{ delay: 0.2, duration: 0.5 }}
-        //                 >
-        //                     <Button variant="outline" onClick={toggleTimer}>
-        //                         {isActive ? (
-        //                             <Pause className="h-4 w-4" />
-        //                         ) : (
-        //                             <Play className="h-4 w-4" />
-        //                         )}
-        //                     </Button>
-        //                     <Button variant="outline" onClick={resetTimer}>
-        //                         <RefreshCcw className="h-4 w-4" />
-        //                     </Button>
-        //                     <Button variant="outline" onClick={toggleTimerType}>
-        //                         <Settings className="h-4 w-4" />
-        //                     </Button>
-        //                 </motion.div>
-
-       
-
-        //                 <motion.div
-        //                     key={motivationalPhrase}
-        //                     initial={{ opacity: 0, y: 10 }}
-        //                     animate={{ opacity: 1, y: 0 }}
-        //                     exit={{ opacity: 0, y: -10 }}
-        //                     transition={{ duration: 0.3 }}
-        //                     className="bg-white border border-slate-200 text-slate-800  w-full py-2 px-3 rounded-md inline-block text-sm font-medium"
-        //                 >
-        //                     {isLoading ? (
-        //                         <Loader className="animate-spin" />
-        //                     ) : (
-        //                         `${motivationalPhrase}`
-        //                     )}
-        //                 </motion.div>
-        //             </motion.div>
-        //         ) : (
-        //             <motion.div
-        //                 key="type-selection"
-        //                 initial={{ opacity: 0, y: 20 }}
-        //                 animate={{ opacity: 1, y: 0 }}
-        //                 exit={{ opacity: 0, y: -20 }}
-        //                 transition={{ duration: 0.5, ease: "easeInOut" }}
-        //                 className="flex flex-col"
-        //             >
-        //                 <motion.h2
-        //                     initial={{ opacity: 0, y: -10 }}
-        //                     animate={{ opacity: 1, y: 0 }}
-        //                     transition={{ duration: 0.5, ease: "easeOut" }}
-        //                     className="px-4 text-lg mb-4 font-bold text-slate-700 flex items-center"
-        //                 >
-        //                     Select Pomodoro Type
-        //                     <Clock className="w-4 h-4 ml-2 text-slate-500"/>
-        //                 </motion.h2>
-
-        //                 {pomodoroTypes.map((type, index) => (
-        //                     <motion.button
-        //                         key={type.id}
-        //                         className="w-full text-left p-4 rounded-lg transition-all duration-200 hover:bg-slate-100"
-        //                         onClick={() => handleChangeType(type)}
-        //                         initial={{ opacity: 0, y: 20 }}
-        //                         animate={{ opacity: 1, y: 0 }}
-        //                         transition={{
-        //                             delay: index * 0.1,
-        //                             duration: 0.5,
-        //                         }}
-        //                     >
-        //                         <h3 className="text-lg font-semibold text-slate-800">
-        //                             {type.name}
-        //                             {type.id === "standard" ? (
-        //                                 " (Recommended)"
-        //                             ) : (
-        //                                 ""
-        //                             )}
-        //                         </h3>
-        //                         <p className="text-sm text-slate-600">
-        //                             {type.description}
-        //                         </p>
-        //                         <p className="text-xs text-slate-500 mt-1">
-        //                             {type.name === "test" ? (
-        //                                 ""
-        //                             ) : (
-        //                                 `Focus: ${type.focusTime / 60} min | Break: ${type.shortBreak / 60} min | Long Break: ${type.longBreak / 60} min`
-        //                             )}
-        //                         </p>
-
-        //                     </motion.button>
-        //                 ))}
-        //             </motion.div>
-        //         )}
-        //     </AnimatePresence>
-        // </motion.div>
     );
 }
