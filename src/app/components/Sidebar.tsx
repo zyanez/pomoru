@@ -1,7 +1,7 @@
 "use client";
 
 import { Folder, FolderOpen, Loader2, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Project } from "../types/utils";
 import { useProjectList } from "../providers/projectList/use";
 import { ApiCall } from "../calls/ApiCall";
@@ -31,6 +31,14 @@ export function Sidebar() {
     const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
 
+    const activeProjectList = useMemo(() => {
+        return projectList.filter((project) => !project.archived)
+    }, [projectList])
+
+    const archivedProjectList = useMemo(() => {
+        return projectList.filter((project) => project.archived)
+    }, [projectList])
+
     useEffect(() => {
         const fetchProjects = async () => {
             if (session == null) {
@@ -53,47 +61,69 @@ export function Sidebar() {
     return (
         <div className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 overflow-y-auto border-r md:sticky md:block">
             <div className="space-y-4 py-4">
-                <div className="px-3 py-2">
-                    <div className="flex items-center justify-between mb-2">
-                        <h2 className="px-4 text-base font-semibold tracking-tight">
-                            Projects
-                        </h2>
-                        
-                        
-                        <button className="hover:bg-green-500" onClick={()=>setIsOpen(!isOpen)}>
-                            <Plus className="w-6 h-6"/>
-                            </button>
-                        <CreateProjectModal isOpen={isOpen} onOpenChange={setIsOpen} />
-
-
+                {loading ? (
+                    <div className="flex items-center justify-center h-16 text-muted-foreground">
+                        <Loader2 className="animate-spin h-5 w-5 " />
+                        <span className="ml-2 text-sm ">
+                            Loading projects...
+                        </span>
                     </div>
-                    {loading ? (
-                        <div className="flex items-center justify-center h-16 text-muted-foreground">
-                            <Loader2 className="animate-spin h-5 w-5 " />
-                            <span className="ml-2 text-sm ">
-                                Loading projects...
-                            </span>
+                ) : ( 
+                    <>
+                        <div className="px-3 py-2">
+                            <div className="flex items-center justify-between mb-2">
+                                <h2 className="px-4 text-base font-semibold tracking-tight">
+                                    Projects
+                                </h2>
+                                <button className="hover:bg-green-500" onClick={()=>setIsOpen(!isOpen)}>
+                                    <Plus className="w-6 h-6"/>
+                                    </button>
+                                <CreateProjectModal isOpen={isOpen} onOpenChange={setIsOpen} />
+                            </div>
+                            <div className="space-y-1">
+                                {activeProjectList.map((project) => (
+                                    <ProjectButton
+                                        key={project.id}
+                                        project={project}
+                                        active={
+                                            selectedProject?.id === project.id
+                                        }
+                                        onClick={() => selectProject(project)}
+                                    />
+                                ))}
+                                {activeProjectList.length === 0 && (
+                                    <p className="px-4 text-sm text-gray-500">
+                                        No projects available.
+                                    </p>
+                                )}
+                            </div>
                         </div>
-                    ) : (
-                        <div className="space-y-1">
-                            {projectList.map((project) => (
-                                <ProjectButton
-                                    key={project.id}
-                                    project={project}
-                                    active={
-                                        selectedProject?.id === project.id
-                                    }
-                                    onClick={() => selectProject(project)}
-                                />
-                            ))}
-                            {projectList.length === 0 && (
-                                <p className="px-4 text-sm text-gray-500">
-                                    No projects available.
-                                </p>
-                            )}
+                        <div className="px-3 py-2">
+                            <div className="flex items-center justify-between mb-2">
+                                <h2 className="px-4 text-base font-semibold tracking-tight">
+                                    Archive
+                                </h2>
+                            </div>
+                            <div className="space-y-1">
+                                {archivedProjectList.map((project) => (
+                                    <ProjectButton
+                                        key={project.id}
+                                        project={project}
+                                        active={
+                                            selectedProject?.id === project.id
+                                        }
+                                        onClick={() => selectProject(project)}
+                                    />
+                                ))}
+                                {archivedProjectList.length === 0 && (
+                                    <p className="px-4 text-sm text-gray-500">
+                                        No projects archived.
+                                    </p>
+                                )}
+                            </div>
                         </div>
-                    )}
-                </div>
+                    </>
+                )}
             </div>
             <div className="mt-auto p-4">
                 <a
