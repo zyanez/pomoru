@@ -324,14 +324,14 @@ export default function PomodoroTimer({
                              animate={{ opacity: 1, y: 0 }}
                              transition={{ delay: 0.2, duration: 0.5 }}
                          >
-                             <Button variant="outline" size="icon" onClick={toggleTimer}>
+                             <Button variant="outline" size="icon" onClick={toggleTimer} disabled={!selectedProject} >
                                  {isActive ? (
                                      <Pause className="h-4 w-4" />
                                  ) : (
                                      <Play className="h-4 w-4" />
                                  )}
                              </Button>
-                             <Button variant="outline" size="icon" onClick={resetTimer}>
+                             <Button variant="outline" size="icon" onClick={resetTimer} disabled={!selectedProject} >
                                  <RefreshCcw className="h-4 w-4" />
                              </Button>
                              <Button variant="outline" size="icon" onClick={toggleTimerType}>
