@@ -9,8 +9,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ApiCall } from "../calls/ApiCall";
 
-type Phase = "FOCUS" | "SHORT_BREAK" | "LONG_BREAK";
-//type Phase = "Focus" | "Short Break" | "Long Break";
+type Phase = "Focus" | "Short Break" | "Long Break";
+//type Phase = "FOCUS" | "SHORT_BREAK" | "LONG_BREAK";
 
 const pomodoroTypes = [
     {
@@ -56,7 +56,7 @@ export default function PomodoroTimer({
     const [lockedInProject, setLockedInProject] = useState<Project | null>(null);
     const [pomodoroType, setPomodoroType] = useState(pomodoroTypes[1]);
     const [pomodorosBeforeLongBreak] = useState(4);
-    const [phase, setPhase] = useState<Phase>("FOCUS");
+    const [phase, setPhase] = useState<Phase>("Focus");
     const [timeLeft, setTimeLeft] = useState(pomodoroType.focusTime);
     const [isActive, setIsActive] = useState(false);
     const [focusTimeSpent, setFocusTimeSpent] = useState(0);
@@ -67,9 +67,9 @@ export default function PomodoroTimer({
     const [showTimer, setShowTimer] = useState(false);
 
     const currentPhaseTotalTime = useMemo(() => {
-        return phase === "FOCUS"
+        return phase === "Focus"
             ? pomodoroType.focusTime
-            : phase === "SHORT_BREAK"
+            : phase === "Short Break"
             ? pomodoroType.shortBreak
             : pomodoroType.longBreak;
         }, [phase, pomodoroType])
@@ -206,7 +206,7 @@ export default function PomodoroTimer({
         if (isActive && timeLeft > 0) {
             timer = setInterval(() => {
                 setTimeLeft((prev) => prev - 1);
-                if (phase === "FOCUS") {
+                if (phase === "Focus") {
                     setFocusTimeSpent((prev) => prev + 1);
                 } else {
                     setBreakTimeSpent((prev) => prev + 1);
@@ -214,27 +214,27 @@ export default function PomodoroTimer({
             }, 1000);
         } else if (timeLeft === 0) {
             setIsActive(false);
-            if (phase === "FOCUS") {
+            if (phase === "Focus") {
                 setCompletedPomodoros((prev) => prev + 1);
                 const nextPhase: Phase =
                     (completedPomodoros + 1) % pomodorosBeforeLongBreak === 0
-                        ? "LONG_BREAK"
-                        : "SHORT_BREAK";
+                        ? "Long Break"
+                        : "Short Break";
                 setPhase(nextPhase);
                 setTimeLeft(
-                    nextPhase === "LONG_BREAK"
+                    nextPhase === "Long Break"
                         ? pomodoroType.longBreak
                         : pomodoroType.shortBreak
                 );
                 setMotivationalPhrase(selectMotivationalPhrase());
                 sendNotification(
                     "Focus session complete!",
-                    nextPhase === "LONG_BREAK"
+                    nextPhase === "Long Break"
                         ? "Time for a long break."
                         : "Time for a short break."
                 );
             } else {
-                setPhase("FOCUS");
+                setPhase("Focus");
                 setTimeLeft(pomodoroType.focusTime);
                 setMotivationalPhrase(selectMotivationalPhrase());
                 sendNotification(
@@ -259,16 +259,10 @@ export default function PomodoroTimer({
     const handleChangeType = (type: (typeof pomodoroTypes)[number]) => {
         setShowTimer(true);
         setPomodoroType(type);
-        setPhase("FOCUS");
+        setPhase("Focus");
         setTimeLeft(type.focusTime);
         setIsActive(false);
         setMotivationalPhrase(selectMotivationalPhrase());
-    };
-
-    // We need to improve this later!!
-    const formatPhase = (str: string) => {
-        const formattedStr = str.replace(/_/g, " ").toLowerCase();
-        return formattedStr.charAt(0).toUpperCase() + formattedStr.slice(1);
     };
 
     return (
@@ -327,7 +321,7 @@ export default function PomodoroTimer({
                             Pomodoro Timer
                         </h2>
                         <p className="text-center text-xs text-muted-foreground mt-1 mb-4">
-                            {formatPhase(phase.toString())} Session
+                            {phase} Session
                         </p>
 
                         <Timer timeLeft={timeLeft} totalTime={currentPhaseTotalTime} />
