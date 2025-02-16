@@ -1,4 +1,4 @@
-import { Folder } from "lucide-react";
+import { Folder, Plus } from "lucide-react";
 import { ProjectDetails } from "./ProjectDetails";
 import { TasksTable } from "./tasks/TasksTable";
 import { TaskListProvider } from "../providers/taskList/provider";
@@ -6,6 +6,7 @@ import { useProjectList } from "../providers/projectList/use";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export function Body() {
     const { state: { selectedProject } } = useProjectList();
@@ -41,9 +42,13 @@ export function Body() {
                                 <h2 className="text-base font-bold">
                                     Welcome, {session?.user.name || 'user'}!
                                 </h2>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-sm text-muted-foreground mb-2">
                                     Select a project or create one to get started.
                                 </p>
+                                <Button variant="default">
+                                    Create Project
+                                    <Plus/>
+                                </Button>
                             </>
                         )}
                     </div>
