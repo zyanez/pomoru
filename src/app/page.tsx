@@ -37,21 +37,6 @@ export default function Home() {
                     <PomodoroTimer onTimeUpdate={setTotalTime} onPomodoroUpdate={setTotalPomodoro} />
                 </ProjectListProvider>
             </div>
-            {/* <div className="flex flex-1 bg-white">
-                {session ? (
-                    <ProjectListProvider>
-                        <Sidebar />
-                        <main className="flex-1 flex flex-col md:flex-row overflow-auto">
-                            <Body/>
-                            <ModeToggle/>
-                            <PomodoroTimer onTimeUpdate={setTotalTime} onPomodoroUpdate={setTotalPomodoro} />
-                        </main>
-                    </ProjectListProvider>
-                ) : (
-                    "No account..."
-                )}
-            </div>
-            <Footer /> */}
         </div>
     );
 }
