@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { ApiCall } from "../calls/ApiCall";
 
 type Phase = "FOCUS" | "SHORT_BREAK" | "LONG_BREAK";
+//type Phase = "Focus" | "Short Break" | "Long Break";
 
 const pomodoroTypes = [
     {
@@ -53,17 +54,25 @@ export default function PomodoroTimer({
 
     const {state : {selectedProject}, actions: {updateProject}} = useProjectList()
     const [lockedInProject, setLockedInProject] = useState<Project | null>(null);
-    // pomodoroTypes[0] (light) | pomodoroTypes[1] (standard) | pomodoroTypes[3] (intensive)
     const [pomodoroType, setPomodoroType] = useState(pomodoroTypes[1]);
     const [pomodorosBeforeLongBreak] = useState(4);
     const [phase, setPhase] = useState<Phase>("FOCUS");
     const [timeLeft, setTimeLeft] = useState(pomodoroType.focusTime);
     const [isActive, setIsActive] = useState(false);
     const [focusTimeSpent, setFocusTimeSpent] = useState(0);
+    const [breakTimeSpent, setBreakTimeSpent] = useState(0);
     const [completedPomodoros, setCompletedPomodoros] = useState(0);
     const [motivationalPhrase, setMotivationalPhrase] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [showTimer, setShowTimer] = useState(false);
+
+    const currentPhaseTotalTime = useMemo(() => {
+        return phase === "FOCUS"
+            ? pomodoroType.focusTime
+            : phase === "SHORT_BREAK"
+            ? pomodoroType.shortBreak
+            : pomodoroType.longBreak;
+        }, [phase, pomodoroType])
 
     useEffect(() => {
         if ("Notification" in window && Notification.permission !== "granted") {
@@ -78,10 +87,14 @@ export default function PomodoroTimer({
     };
 
     useEffect(() => {
-        if (lockedInProject != null)
+        if (lockedInProject != null){
             setFocusTimeSpent(lockedInProject.workedTime)
-        else if (selectedProject != null)
+            setBreakTimeSpent(lockedInProject.restedTime)
+        }
+        else if (selectedProject != null){
             setFocusTimeSpent(selectedProject.workedTime)
+            setBreakTimeSpent(selectedProject.restedTime)
+        }
     }, [selectedProject, lockedInProject])
 
     const selectMotivationalPhrase = useCallback(() => {
@@ -143,13 +156,14 @@ export default function PomodoroTimer({
 
     const saveTimeSpent = useCallback(() => {
         lockedInProject!.workedTime = focusTimeSpent;
+        lockedInProject!.restedTime = breakTimeSpent;
         updateProject(lockedInProject!)
-        ApiCall.updateProject(lockedInProject!.id, {workedTime: focusTimeSpent})
-    }, [lockedInProject, focusTimeSpent])
+        ApiCall.updateProject(lockedInProject!.id, {workedTime: focusTimeSpent, restedTime: breakTimeSpent})
+    }, [lockedInProject, focusTimeSpent, breakTimeSpent])
 
-    useMemo(()=>{
+    useMemo(() => {
         if (timeLeft % 20 == 1) saveTimeSpent()
-    },[lockedInProject, timeLeft])
+    }, [lockedInProject, timeLeft])
 
     // Toggle for Timer
     const toggleTimer = () => {
@@ -194,6 +208,8 @@ export default function PomodoroTimer({
                 setTimeLeft((prev) => prev - 1);
                 if (phase === "FOCUS") {
                     setFocusTimeSpent((prev) => prev + 1);
+                } else {
+                    setBreakTimeSpent((prev) => prev + 1);
                 }
             }, 1000);
         } else if (timeLeft === 0) {
@@ -238,7 +254,6 @@ export default function PomodoroTimer({
         pomodorosBeforeLongBreak,
         completedPomodoros,
         selectMotivationalPhrase,
-        saveTimeSpent,
     ]);
 
     const handleChangeType = (type: (typeof pomodoroTypes)[number]) => {
@@ -249,14 +264,6 @@ export default function PomodoroTimer({
         setIsActive(false);
         setMotivationalPhrase(selectMotivationalPhrase());
     };
-
-    const currentPhaseTotalTime =
-        phase === "FOCUS"
-            ? pomodoroType.focusTime
-            : phase === "SHORT_BREAK"
-            ? pomodoroType.shortBreak
-            : pomodoroType.longBreak;
-
 
     // We need to improve this later!!
     const formatPhase = (str: string) => {
@@ -294,15 +301,13 @@ export default function PomodoroTimer({
                                             {type.description}
                                         </p>
                                         <p className="text-xs text-muted-foreground">
-                                            {type.name === "test"
-                                                ? ""
-                                                : `Focus: ${
-                                                      type.focusTime / 60
-                                                  } min | Break: ${
-                                                      type.shortBreak / 60
-                                                  } min | Long Break: ${
-                                                      type.longBreak / 60
-                                                  } min`}
+                                            {`Focus: ${
+                                                type.focusTime / 60
+                                            } min | Break: ${
+                                                type.shortBreak / 60
+                                            } min | Long Break: ${
+                                                type.longBreak / 60
+                                            } min`}
                                         </p>
                                     </div>
                                 </button>
@@ -362,7 +367,7 @@ export default function PomodoroTimer({
                             }
                         </motion.div>
 
-                        <TimeSpent completedPomodoros={completedPomodoros} focusTimeSpent={focusTimeSpent} />
+                        <TimeSpent completedPomodoros={completedPomodoros} breakTimeSpent={breakTimeSpent} focusTimeSpent={focusTimeSpent} />
                          
                         <motion.div
                             key={motivationalPhrase}
@@ -388,7 +393,7 @@ export default function PomodoroTimer({
     );
 }
 
-function TimeSpent({completedPomodoros, focusTimeSpent}: {completedPomodoros : number, focusTimeSpent : number}) {
+function TimeSpent({completedPomodoros, breakTimeSpent, focusTimeSpent}: {completedPomodoros: number, breakTimeSpent: number, focusTimeSpent: number}) {
     const formatFullTime = (seconds: number) => {
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
@@ -408,10 +413,10 @@ function TimeSpent({completedPomodoros, focusTimeSpent}: {completedPomodoros : n
                 className="bg-slate-100 rounded-lg p-3 w-1/2"
             >
                 <h3 className="text-xs font-medium text-slate-500 mb-1">
-                    Completed
+                    Break Time Spent
                 </h3>
                 <p className="text-xl font-bold text-slate-900">
-                    {completedPomodoros}
+                    {formatFullTime(breakTimeSpent)}
                 </p>
             </motion.div>
 
@@ -440,7 +445,6 @@ function Timer({timeLeft, totalTime} : {timeLeft:number, totalTime:number}){
         return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
     };
 
-    
     const progressOffset = 283 - (283 * timeLeft) / totalTime;
 
     return (
