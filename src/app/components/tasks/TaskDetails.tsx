@@ -1,7 +1,7 @@
 import { useTaskList } from "@/app/providers/taskList/use";
 import { Task } from "@/app/types/utils";
 import { Check, EllipsisVertical, X } from "lucide-react";
-import { UpdateTaskModal2 } from "../nowaitmodal/UpdateTaskModal2";
+import UpdateTaskModal from "../inlineModals/UpdateTaskModal";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -64,7 +64,7 @@ export function TaskDetails({task} : {task:Task}){
                         <EllipsisVertical />
                     </Button>
                 </div>
-                <UpdateTaskModal2 isOpen={isOpen} onOpenChange={setIsOpen} task={task}  />
+                <UpdateTaskModal isOpen={isOpen} onOpenChange={setIsOpen} task={task}  />
             </div>
         </div>
     );

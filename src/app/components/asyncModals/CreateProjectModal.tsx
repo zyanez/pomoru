@@ -3,7 +3,7 @@ import { Plus, User } from "lucide-react";
 import { useProjectList } from "@/app/providers/projectList/use";
 import { useSession } from "next-auth/react";
 import { ApiCall } from "@/app/calls/ApiCall";
-import ShadcnModal from "./ShadcnModal";
+import ShadcnModal from "./AsyncModal";
 
 interface ModalProps {
     isOpen: boolean;

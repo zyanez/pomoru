@@ -2,7 +2,7 @@ import { ClipboardList, Loader2, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TaskDetails } from "./TaskDetails";
 import { useTaskList } from "@/app/providers/taskList/use";
-import CreateTaskModal from "../newmodal/CreateTaskModal";
+import CreateTaskModal from "../asyncModals/CreateTaskModal";
 import { ApiCall } from "@/app/calls/ApiCall";
 import { useProjectList } from "@/app/providers/projectList/use";
 import { Button } from "@/components/ui/button";

@@ -1,36 +1,26 @@
 
-import { useState } from "react";
-import { Check, Cog, User, X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { Check, User, X } from "lucide-react";
 import { useTaskList } from "@/app/providers/taskList/use";
-import LoadingModal from "./LoadingModal";
 import { Task } from "@/app/types/utils";
 import { ApiCall } from "@/app/calls/ApiCall";
+import ShadcnModal2 from "./InlineModal";
 
-export function UpdateTaskModal({task} : {task:Task}){
-    const {actions : {updateTask}} = useTaskList()
+interface ModalProps {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    task: Task
+}
+
+export default function UpdateTaskModal({isOpen, onOpenChange, task} : ModalProps){
+    const {actions : {updateTask, deleteTask}} = useTaskList()
     const [title, setTitle] = useState(task.title);
     const [completed, setCompleted] = useState(task.completed);
     const [important, setImportant] = useState(task.important);
     
-    const handleSubmit : () => Promise<boolean> = async () => {
-        try {
-            if (title.trim() == "") {
-                alert("Task title is required.");
-                return false;
-            }
-            const updatedTask = await ApiCall.updateTask(task.id, {title, important, completed})
-            updateTask(updatedTask);
-
-            return true;
-        } catch (error) {
-            console.error("Error creating task:", error);
-            let error_message = "No message"
-            if (error instanceof Error)
-                error_message = error.message
-            alert("There was an error during task creation. " + error_message);
-            return false;
-        }
-    };
+    useEffect(() => {
+        resetFields();
+    }, [task])
 
     const resetFields = ()=>{
         setTitle(task.title);
@@ -38,18 +28,47 @@ export function UpdateTaskModal({task} : {task:Task}){
         setCompleted(task.completed);
     }
 
-    const labels = {
-        normalLabel: "Update Task",
-        loadingLabel: "Updating Task..."
-    }
+    const update =  useCallback(() => {
+        try {
+            if (title.trim() == "") {
+                throw new Error("Task title is required.");
+            }
 
-    return <LoadingModal
+            ApiCall.updateTask(task.id, {title, important, completed})
+
+            task.title = title;
+            task.important = important;
+            task.completed = completed;
+            updateTask(task);
+        } catch (error) {
+            console.error("Error updating task:", error);
+            let error_message = "No message"
+            if (error instanceof Error)
+                error_message = error.message
+            alert("There was an error during task update. " + error_message);
+        }
+    }, [task]);
+
+    const remove =  useCallback(() => {
+        try {
+            ApiCall.deleteTask(task.id)
+            deleteTask(task.id);
+
+        } catch (error) {
+            console.error("Error removing task:", error);
+            let error_message = "No message"
+            if (error instanceof Error)
+                error_message = error.message
+            alert("There was an error during task removal. " + error_message);
+        }
+    }, [task]);
+
+    return <ShadcnModal2
         title={"Update Task"}
-        buttonLabel=""
-        buttonIcon={<Cog className="h-4 w-4" />}
-        confirmLabels={labels}
-        onConfirm={handleSubmit}
-        onOpen={resetFields}     
+        onConfirm={update}
+        onDelete={remove}
+        isOpen={isOpen} 
+        onOpenChange={onOpenChange}
     >
         <div>
             <label className="block text-m font-medium text-slate-700 mb-2">
@@ -112,5 +131,5 @@ export function UpdateTaskModal({task} : {task:Task}){
             </div>
         </div>
         
-    </LoadingModal>
+    </ShadcnModal2>
 }

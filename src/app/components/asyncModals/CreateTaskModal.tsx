@@ -7,7 +7,7 @@ import { AlertTriangle, Circle, CircleAlert  } from "lucide-react";
 import { useTaskList } from "@/app/providers/taskList/use";
 import { ApiCall } from "@/app/calls/ApiCall";
 import { useProjectList } from "@/app/providers/projectList/use";
-import ShadcnModal from "./ShadcnModal";
+import ShadcnModal from "./AsyncModal";
 
 interface ModalProps {
     isOpen: boolean;

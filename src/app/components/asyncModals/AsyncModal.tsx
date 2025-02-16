@@ -79,9 +79,6 @@ export default function ShadBaseModal({
                         </DialogClose>
                     </div>
 
-                    
-                    
-
                 </div>
             </DialogContent>
         </Dialog>

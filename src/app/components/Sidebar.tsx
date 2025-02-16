@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import * as React from "react";
 import type { SVGProps } from "react";
-import CreateProjectModal from "./newmodal/CreateProjectModal";
+import CreateProjectModal from "./asyncModals/CreateProjectModal";
 
 const Github = (props: SVGProps<SVGSVGElement>) => (
     <svg

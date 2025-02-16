@@ -4,7 +4,7 @@ import { Archive, ArchiveRestore, Check, User, X } from "lucide-react";
 import { useProjectList } from "@/app/providers/projectList/use";
 import { Project } from "@/app/types/utils";
 import { ApiCall } from "@/app/calls/ApiCall";
-import ShadcnModal2 from "./ShadcnModal2";
+import ShadcnModal2 from "./InlineModal";
 
 interface ModalProps {
     isOpen: boolean;
