@@ -7,11 +7,13 @@ import { useSession } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { TooltipProvider, TooltipTrigger, Tooltip, TooltipContent } from "@/components/ui/tooltip";
 
 export function Body() {
     const { state: { selectedProject } } = useProjectList();
     const { data: session, status } = useSession();
     const [isLoading, setIsLoading] = useState(true);
+    const [showTooltip, setShowTooltip] = useState(true);
 
     useEffect(() => {
         if (status !== "loading") {
@@ -45,10 +47,14 @@ export function Body() {
                                 <p className="text-sm text-muted-foreground mb-2">
                                     Select a project or create one to get started.
                                 </p>
-                                <Button variant="default">
+                                <Button className="h-10" variant="default">
                                     Create Project
-                                    <Plus/>
+                                    <Plus />
                                 </Button>
+
+                                
+
+                                
                             </>
                         )}
                     </div>

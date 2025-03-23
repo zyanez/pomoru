@@ -8,6 +8,12 @@ import { Project } from "../types/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import TooltipModal from "./modal/tooltipModal";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+  } from "@/components/ui/tooltip"
 
 type Phase = "FOCUS" | "SHORT_BREAK" | "LONG_BREAK";
 
@@ -226,9 +232,22 @@ export default function PomodoroTimer({
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.5, ease: "easeInOut" }}
                     >
-                        <h2 className="mb-2 text-lg font-bold tracking-tight">
+                        <div className="flex flex-row space-x-2 items-center mb-2">
+                        <h2 className="text-lg font-bold tracking-tight">
                             Pomodoro Settings
                         </h2>
+                        <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon"><Info/></Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                            <p>Choose the Pomodoro mode that best suits your needs.</p>
+                            </TooltipContent>
+                        </Tooltip>
+                        </TooltipProvider>
+                        </div>
+
                         <div className="space-y-2">
                             {pomodoroTypes.map((type, index) => (
                                 <button
@@ -324,13 +343,41 @@ export default function PomodoroTimer({
                              animate={{ opacity: 1, y: 0 }}
                              transition={{ delay: 0.2, duration: 0.5 }}
                          >
-                             <Button variant="outline" size="icon" onClick={toggleTimer} disabled={!selectedProject} >
-                                 {isActive ? (
-                                     <Pause className="h-4 w-4" />
-                                 ) : (
-                                     <Play className="h-4 w-4" />
-                                 )}
-                             </Button>
+                             <TooltipProvider>
+  {!selectedProject ? (
+    // Tooltip para estado disabled
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className="inline-flex cursor-not-allowed">
+          <Button
+            variant="outline"
+            size="icon"
+            disabled={true}
+            className="disabled:opacity-50 disabled:pointer-events-none"
+          >
+            <Play className="h-4 w-4" />
+          </Button>
+        </span>
+      </TooltipTrigger>
+      <TooltipContent side="top">
+        <p className="text-sm">Select or create a project to start the timer</p>
+      </TooltipContent>
+    </Tooltip>
+  ) : (
+    // Botón funcional cuando hay proyecto
+    <Button
+      variant="outline"
+      size="icon"
+      onClick={toggleTimer}
+    >
+      {isActive ? (
+        <Pause className="h-4 w-4" />
+      ) : (
+        <Play className="h-4 w-4" />
+      )}
+    </Button>
+  )}
+</TooltipProvider>
                              <Button variant="outline" size="icon" onClick={resetTimer} disabled={!selectedProject} >
                                  <RefreshCcw className="h-4 w-4" />
                              </Button>

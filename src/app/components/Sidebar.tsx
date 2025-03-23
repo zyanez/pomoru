@@ -1,6 +1,6 @@
 "use client";
 
-import { Folder, FolderOpen, Loader2 } from "lucide-react";
+import { Folder, FolderOpen, Loader2, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Project } from "../types/utils";
 import { motion } from "framer-motion";
@@ -66,8 +66,8 @@ export function Sidebar() {
                             <h2 className="px-4 text-base font-semibold tracking-tight">
                                 Projects
                             </h2>
-                            <div className="-ml-2 text-[.685rem] text-muted-foreground font-medium">
-                                ({`${String(projectList.length).padStart(2, '0')}`} / 30)
+                            <div className="-ml-2 text-xs bg-muted px-2 py-1 rounded-full font-mono text-muted-foreground font-bold">
+                                {`${String(projectList.length).padStart(2, '0')}`}/30
                             </div>
                         </div>
                         <CreateProjectModal />
@@ -96,7 +96,7 @@ export function Sidebar() {
                                     ))}
                                     {projectList.length === 0 && (
                                         <p className="px-4 text-sm text-muted-foreground">
-                                            No projects available.
+                                            {"You don't have any projects yet."}
                                         </p>
                                     )}
                                 </div>
@@ -104,7 +104,7 @@ export function Sidebar() {
                             </>
                         ) : (
                             <p className="px-4 text-sm text-muted-foreground">
-                                Create your first project!
+                                {""}
                             </p>
                         )}
                     </> 
